@@ -136,9 +136,9 @@ const login = async (req, res) => {
     });
 
     if (!result) {
-        return res.status(400).json({ msg: "Invalid Credentials" });
+        return res.status(400).json({ msg: "email find nahi hua" });
     }
-    // console.log(await bcrypt.compare(password, result.password));
+    console.log("password match: ", await bcrypt.compare(password, result.password));
     const generateToken = async (result) => {
         try {
             return jwt.sign({

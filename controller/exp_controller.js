@@ -61,27 +61,7 @@ const explist = async (req, res) => {
 
 // *--------------------------------------
 // * User Login Logic
-// *--------------------------------------
-const ledger = async (req, res) => {
-    const { userid, ledger } = req.body;
-    // console.log(userid,ledger)
-    const result = await model.find({ userid, ledger });
-    // console.log(result)
-    if (result) {
-        res.json({
-            msg: "data found",
-            data: result
-        })
-    } else {
-        res.json({
-            msg: "something went wrong in db"
-        })
-    }
-}
-
-// *--------------------------------------
-// * User Login Logic
-// *--------------------------------------
+// *----------------------------------
 const offledger = async (req, res) => {
     try {
         const result = await user.find({ email: "test@gmail.com" });
@@ -197,7 +177,7 @@ const userledger = async (req, res) => {
 // *--------------------------------------
 const userdata = async (req, res) => {
     // const bearertoken = req.header('Authorization');
-    // console.log("from finally",req.user);
+    console.log("from userdata api",req.user);
     try {
         const explist = await model.find({ userid: req.user._id }).sort({ date: -1 });
         if (explist) {
