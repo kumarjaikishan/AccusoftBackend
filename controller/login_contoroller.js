@@ -177,7 +177,7 @@ const photo = async (req, res) => {
 // *--------------------------------------
 // * User Login 2nd method without nodecache Logic
 // *--------------------------------------
-const login2 = async (req, res) => {
+const login = async (req, res) => {
      const { email, password } = req.body;
     try {
         const result = await user.findOne({ email });
