@@ -121,86 +121,89 @@ const photo = async (req, res) => {
 // *--------------------------------------
 // * User Login 1st method with nodecache Logic
 // *--------------------------------------
-// const login = async (req, res) => {
-//     let usersdata;
-//     if (myCache.has("allusers")) {
-//         usersdata = JSON.parse(myCache.get("allusers"));
-//     } else {
-//         usersdata = await user.find({});
-//         myCache.set("allusers", JSON.stringify(usersdata));
-//     }
-//     const { email, password } = req.body;
+const login = async (req, res) => {
+    let usersdata;
+    if (myCache.has("allusers")) {
+        usersdata = JSON.parse(myCache.get("allusers"));
+    } else {
+        usersdata = await user.find({});
+        myCache.set("allusers", JSON.stringify(usersdata));
+    }
+    const { email, password } = req.body;
 
-//     const result = await usersdata.find((hel) => {
-//         return hel.email == req.body.email
-//     });
+    const result = await usersdata.find((hel) => {
+        return hel.email == req.body.email
+    });
 
-//     if (!result) {
-//         return res.status(400).json({ msg: "email find nahi hua" });
-//     }
-//     console.log("password match: ", await bcrypt.compare(password, result.password));
-//     const generateToken = async (result) => {
-//         try {
-//             return jwt.sign({
-//                 userId: result._id.toString(),
-//                 email: result.email,
-//                 isAdmin: result.isadmin
-//             },
-//                 process.env.jwt_token,
-//                 {
-//                     expiresIn: "30d",
-//                 }
-//             );
-//         } catch (error) {
-//             console.error(error);
-//         }
-//     }
+    if (!result) {
+        return res.status(400).json({ msg: "Invalid Credientials" });
+    }
+    console.log("password match: ", await bcrypt.compare(password, result.password));
+    const generateToken = async (result) => {
+        try {
+            return jwt.sign({
+                userId: result._id.toString(),
+                email: result.email,
+                isAdmin: result.isadmin
+            },
+                process.env.jwt_token,
+                {
+                    expiresIn: "30d",
+                }
+            );
+        } catch (error) {
+            console.error(error);
+        }
+    }
 
-//     if (await bcrypt.compare(password, result.password)) {
-//         const dfg = await generateToken(result);
-//         const fbf = result._id.toString();
-//         result.password = undefined;
-//         result.date = undefined;
-//         result._id = undefined;
-//         result.phone = undefined;
-//         res.status(200).json({
-//             msg: "Login Successful",
-//             token: dfg,
-//             userId: fbf
-//         });
-//     } else {
-//         res.status(400).json({ msg: "Invalid Email or Passowrd" });
-//     }
-// }
+    if (await bcrypt.compare(password, result.password)) {
+        const dfg = await generateToken(result);
+        const fbf = result._id.toString();
+        result.password = undefined;
+        result.date = undefined;
+        result._id = undefined;
+        result.phone = undefined;
+        res.status(200).json({
+            msg: "Login Successful",
+            token: dfg,
+            userId: fbf
+        });
+    } else {
+        res.status(400).json({ msg: "Invalid Email or Passowrd" });
+    }
+}
 
 
 // *--------------------------------------
 // * User Login 2nd method without nodecache Logic
 // *--------------------------------------
-const login = async (req, res) => {
-     const { email, password } = req.body;
-    try {
-        const result = await user.findOne({ email });
-        if (!result) {
-            return res.status(400).json({ msg: "Invalid Credentials" });
-        }
-        if (await result.checkpassword(password)) {
-            result.password = undefined;
-            result.date = undefined;
-            result._id = undefined;
-            result.phone = undefined;
-            res.status(200).json({
-                msg: "Login Successful",
-                token: await result.generateToken(),
-                userId: result._id.toString()
-            });
-        } else {
-            res.status(400).json({ msg: "Invalid Email or Passowrd" });
-        }
-    } catch (error) {
-        res.status(500).json({ msg: "INTERNAL SERVER ERROR" });
-    }
-}
+// const login = async (req, res) => {
+//      const { email, password } = req.body;
+//      console.log(email, password);
+//     try {
+//         const result = await user.findOne({ email });
+//         const result1 = await user.find();
+//         console.log(result1);
+//         if (!result) {
+//             return res.status(400).json({ msg: "Email not found" });
+//         }
+//         if (await result.checkpassword(password)) {
+//             result.password = undefined;
+//             result.date = undefined;
+//             result._id = undefined;
+//             result.phone = undefined;
+//             res.status(200).json({
+//                 msg: "Login Successful",
+//                 token: await result.generateToken(),
+//                 userId: result._id.toString()
+//             });
+//         } else {
+//             res.status(400).json({ msg: "Invalid Email or Passowrd" });
+//         }
+//     } catch (error) {
+//         res.status(500).json({ msg: "INTERNAL SERVER ERROR" });
+//     }
+// }
 
 
 // *--------------------------------------

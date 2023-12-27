@@ -177,7 +177,7 @@ const userledger = async (req, res) => {
 // *--------------------------------------
 const userdata = async (req, res) => {
     // const bearertoken = req.header('Authorization');
-    console.log("from userdata api",req.user);
+    // console.log("from userdata api",req.user);
     try {
         const explist = await model.find({ userid: req.user._id }).sort({ date: -1 });
         if (explist) {
