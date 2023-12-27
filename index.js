@@ -21,23 +21,19 @@ app.get('/', (req, res) => {
    res.status(200).send("This is From Expense Manager Backend, Created by Jai kishan")
 })
 
-router.route('/signup').post(login.signup);
-router.route('/login').post(login.login);
-router.route('/photo').post(authmiddlewre,upload.single('image'),login.photo);
-router.route('/admin').get(authmiddlewre,adminmiddleware,login.admin);
+ router.route('/signup').post(login.signup);    //used
+router.route('/login').post(login.login);      //used
+router.route('/photo').post(authmiddlewre,upload.single('image'),login.photo); //used
+router.route('/admin').get(authmiddlewre,adminmiddleware,login.admin); //used
 
-router.route('/addexpense').post(authmiddlewre,expense.addexpense);
-router.route('/explist').post(expense.explist);
-router.route('/offledger').get(expense.offledger);
-router.route('/offexpfetch').get(expense.offexpfetch);
-router.route('/offexpense').post(expense.offexpense);
-router.route('/datafetcheditexp').post(authmiddlewre,expense.datafetcheditexp);
-router.route('/userdata').get(authmiddlewre,expense.userdata);
-router.route('/userledger').post(authmiddlewre,expense.userledger);         
+router.route('/addexpense').post(authmiddlewre,expense.addexpense); //used
+router.route('/datafetcheditexp').post(authmiddlewre,expense.datafetcheditexp); //used
+router.route('/userdata').get(authmiddlewre,expense.userdata); //used
+router.route('/userledger').post(authmiddlewre,expense.userledger);    //used     
 
-router.route('/deleteoneexp').post(authmiddlewre,deletee.deleteoneexp);
-router.route('/delmany').delete(authmiddlewre,deletee.delmany);
-router.route('/updateexp').post(authmiddlewre,deletee.updateexp);
+router.route('/deleteoneexp').post(authmiddlewre,deletee.deleteoneexp); //used
+router.route('/delmany').delete(authmiddlewre,deletee.delmany); //used
+router.route('/updateexp').post(authmiddlewre,deletee.updateexp); //used
 
 app.listen(port, () => {
     console.log(`server listening at ${port}`);
