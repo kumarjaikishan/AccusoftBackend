@@ -25,6 +25,7 @@ app.get('/', (req, res) => {
 router.route('/login').post(login.login);      //used
 router.route('/photo').post(authmiddlewre,upload.single('image'),login.photo); //used
 router.route('/admin').get(authmiddlewre,adminmiddleware,login.admin); //used
+router.route('/updateuserdetail').post(authmiddlewre,login.updateuserdetail); //used
 
 router.route('/addexpense').post(authmiddlewre,expense.addexpense); //used
 router.route('/datafetcheditexp').post(authmiddlewre,expense.datafetcheditexp); //used
