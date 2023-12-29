@@ -7,6 +7,7 @@ const cors = require('cors')
 const login = require("./controller/login_contoroller");
 const expense = require("./controller/exp_controller");
 const deletee = require("./controller/delete_controller");
+const ledger = require("./controller/ledger_controller");
 const authmiddlewre= require('./middleware/auth_middleware')
 const adminmiddleware= require('./middleware/admin_middleware')
 const upload = require('./middleware/multer_middleware')
@@ -35,6 +36,10 @@ router.route('/userledger').post(authmiddlewre,expense.userledger);    //used
 router.route('/deleteoneexp').post(authmiddlewre,deletee.deleteoneexp); //used
 router.route('/delmany').delete(authmiddlewre,deletee.delmany); //used
 router.route('/updateexp').post(authmiddlewre,deletee.updateexp); //used
+
+router.route('/addledger').post(authmiddlewre,ledger.addledger); //used
+router.route('/updateledger').post(authmiddlewre,ledger.updateledger);    //used     
+router.route('/deleteledger').post(authmiddlewre,ledger.deleteledger); //used
 
 app.listen(port, () => {
     console.log(`server listening at ${port}`);

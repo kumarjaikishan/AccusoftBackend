@@ -1,4 +1,4 @@
-const model = require('../modals/expschema')
+const model = require('../modals/exp_schema')
 
 
 

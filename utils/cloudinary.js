@@ -1,5 +1,5 @@
 const cloudinary = require('cloudinary').v2
-const user = require('../modals/loginschema');
+const user = require('../modals/login_schema');
 const fs = require('fs');
 
 cloudinary.config({

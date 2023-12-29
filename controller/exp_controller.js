@@ -1,22 +1,22 @@
-const office = require('../conn/officeexp')
-const model = require('../modals/expschema')
-const user = require('../modals/loginschema')
+const ledger = require('../modals/ledger_schema')
+const expense = require('../modals/exp_schema')
+const user = require('../modals/login_schema')
 
 
 // *--------------------------------------
 // * User Registration Logic
 // *--------------------------------------
 const addexpense = async (req, res) => {
-    const { ledger, date, amount, narration } = req.body;
-    const userid = req.userid
+    const {ledger, date, amount, narration } = req.body;
+    // const userid = req.userid
     // console.log(ledger, date, amount, narration, userid);
-    if (!userid || !ledger || !date || !amount || !narration) {
+    if (!ledger || !date || !amount || !narration) {
         return res.status(203).json({
             msg: "all fields are required"
         })
     }
     try {
-        const query = new model({ userid, ledger, date, amount, narration });
+        const query = new expense({ userid:req.userid, ledger, date, amount, narration });
         const result = await query.save();
         if (result) {
             res.status(201).json({
@@ -38,7 +38,7 @@ const addexpense = async (req, res) => {
 const datafetcheditexp = async (req, res) => {
     const _id = req.body.id;
     // console.log(_id)
-    const result = await model.find({ _id });
+    const result = await expense.find({ _id });
     if (result) {
         res.json({
             msg: "data found",
@@ -72,21 +72,24 @@ const userledger = async (req, res) => {
     }
 }
 
+
 // *--------------------------------------
 // * User Login Logic
 // *--------------------------------------
 const userdata = async (req, res) => {
-    // const bearertoken = req.header('Authorization');
-    // console.log("from userdata api",req.user);
     try {
-        const explist = await model.find({ userid: req.user._id }).sort({ date: -1 });
+        const explist = await expense.find({ userid: req.user._id }).populate('ledger').sort({date:-1});
+        const ledgere = await ledger.find({ userid: req.user._id });
+        // console.log(ledgere);
         if (explist) {
             res.status(200).json({
                 user: req.user,
-                explist: explist
+                explist: explist,
+                ledger:ledgere
             })
         }
     } catch (error) {
+        console.log(error);
         res.status(500).json({
             msg: error
         })

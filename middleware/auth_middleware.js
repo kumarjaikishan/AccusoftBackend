@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken');
-const User = require('../modals/loginschema');
+const User = require('../modals/login_schema');
 
 const authmiddlewre = async (req, res, next) => {
     const bearertoken = req.header('Authorization');

@@ -1,11 +1,13 @@
-const model = require('../modals/expschema')
-const user = require('../modals/loginschema')
+const model = require('../modals/exp_schema')
+const user = require('../modals/login_schema')
+const ledmodel = require('../modals/ledger_schema')
 const NodeCache = require("node-cache");
 const myCache = new NodeCache();
 const bcrypt = require('bcrypt');
 const cloudinary = require('cloudinary').v2;
 const fs = require('fs');
-const jwt = require('jsonwebtoken')
+const jwt = require('jsonwebtoken');
+const { clearScreenDown } = require('readline');
 
 cloudinary.config({
     cloud_name: 'dusxlxlvm',
@@ -211,19 +213,25 @@ const login = async (req, res) => {
 // *--------------------------------------
 const signup = async (req, res) => {
     // console.log(req.body);
-    const { name, email, phone, password, date, ledger } = req.body;
-    if (!name || !email || !phone || !password || !date || !ledger) {
+    const { name, email, phone, password, date } = req.body;
+    if (!name || !email || !phone || !password || !date) {
         console.log("all fieldse are req");
         res.json({
             msg: "all fields are required"
         })
     }
     try {
-        const query = new user({ name, email, phone, password, date, ledger });
+        // console.log(fgrd,dsd);
+        const query = new user({ name, email, phone, password, date });
         const result = await query.save();
         console.log(result);
         if (result) {
+            // console.log(result);
             myCache.del("allusers");
+            const ledger1 = new ledmodel({ userid: result._id.toString(), ledger: "general" });
+            const ledger2 = new ledmodel({ userid: result._id.toString(), ledger: "other" });
+            const save1 = await ledger1.save();
+            const save2 = await ledger2.save();
             res.status(201).json({
                 msg: "SignUp successfully",
                 data: result
@@ -234,6 +242,7 @@ const signup = async (req, res) => {
             })
         }
     } catch (error) {
+        console.log(error);
         res.status(500).json({
             msg: error
         })
@@ -266,7 +275,7 @@ const updateuserdetail = async (req, res) => {
     // console.log(req.user);
     const { name, phone } = req.body;
     try {
-        const query = await user.findByIdAndUpdate({ _id: req.userid },{ name,phone })
+        const query = await user.findByIdAndUpdate({ _id: req.userid }, { name, phone })
         if (query) {
             // console.log(query);
             return res.status(200).json({
