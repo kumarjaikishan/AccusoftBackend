@@ -281,7 +281,7 @@ const verify = async (req, res) => {
         const query = await user.findByIdAndUpdate({ _id: req.query.id }, { isverified: true });
         if(query){
             res.status(201).json({
-                msg:"User Email verified Successfully"
+                msg:'User Email verified Successfully,Now <a href="https://frontend-exp-man.vercel.app" target="_blank">Click Here</a> to proceed'
             })
         }
     } catch (error) {
