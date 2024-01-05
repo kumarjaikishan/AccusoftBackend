@@ -277,10 +277,12 @@ const updateuserdetail = async (req, res) => {
 const verify = async (req, res) => {
     try {
         const query = await user.findByIdAndUpdate({ _id: req.query.id }, { isverified: true });
+       
         if(query){
             res.status(201).json({
                 msg:`Hi ${query.name},Email verified Successfully,Now You can Proceed to Login`
             })
+            // res.status(201).send(`<html><h2> Hi ${query.name}, Email Verified Successfully </h2></html>`)
         }
     } catch (error) {
         res.status(500).json({
