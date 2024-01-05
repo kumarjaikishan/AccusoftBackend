@@ -209,7 +209,7 @@ const login = async (req, res) => {
 // *--------------------------------------
 // * User SignUp Logic
 // *--------------------------------------
-const signup = async (req, res) => {
+const signup = async (req, res, next) => {
     // console.log(req.body);
     const { name, email, phone, password, date } = req.body;
     if (!name || !email || !phone || !password || !date) {
@@ -222,7 +222,7 @@ const signup = async (req, res) => {
         // console.log(fgrd,dsd);
         const query = new user({ name, email, phone, password, date });
         const result = await query.save();
-        console.log(result);
+        // console.log(result);
         if (result) {
             // console.log(result);
             myCache.del("allusers");
@@ -230,10 +230,13 @@ const signup = async (req, res) => {
             const ledger2 = new ledmodel({ userid: result._id.toString(), ledger: "other" });
             const save1 = await ledger1.save();
             const save2 = await ledger2.save();
-            res.status(201).json({
-                msg: "SignUp successfully",
-                data: result
-            })
+            req.body.userid = result._id.toString();
+            // console.log(result._id.toString());
+            next();
+            // res.status(201).json({
+            //     msg: "SignUp successfully",
+            //     data: result
+            // })
         } else {
             res.status(500).json({
                 msg: "something went wrong in db"
@@ -272,4 +275,21 @@ const updateuserdetail = async (req, res) => {
     }
 }
 
-module.exports = {  signup, photo, login, updateuserdetail };
+const verify = async (req, res) => {
+    console.log("verify route", req.query.id);
+    try {
+        const query = await user.findByIdAndUpdate({ _id: req.query.id }, { isverified: true });
+        if(query){
+            res.status(201).json({
+                msg:"User Email verified Successfully"
+            })
+        }
+    } catch (error) {
+        res.status(500).json({
+            msg:"User Email not  verified",
+            error:error
+        })
+    }
+}
+
+module.exports = { signup, photo, login, updateuserdetail, verify };

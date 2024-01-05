@@ -33,6 +33,10 @@ const log = new mongo.Schema({
     isadmin: {
         type: Boolean,
         default: false
+    },
+    isverified: {
+        type: Boolean,
+        default: false
     }
 })
 
