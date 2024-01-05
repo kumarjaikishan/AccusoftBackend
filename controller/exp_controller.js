@@ -32,24 +32,6 @@ const addexpense = async (req, res) => {
     }
 }
 
-// *--------------------------------------
-// * User Login Logic
-// *--------------------------------------
-const datafetcheditexp = async (req, res) => {
-    const _id = req.body.id;
-    // console.log(_id)
-    const result = await expense.find({ _id });
-    if (result) {
-        res.json({
-            msg: "data found",
-            data: result
-        })
-    } else {
-        res.json({
-            msg: "something went wrong"
-        })
-    }
-}
 
 // *--------------------------------------
 // * User Login Logic
@@ -79,8 +61,8 @@ const userledger = async (req, res) => {
 const userdata = async (req, res) => {
     console.time("time taken by userdata");
     try {
-        const explist = await expense.find({ userid: req.user._id }).populate('ledger').sort({date:-1});
-        const ledgere = await ledger.find({ userid: req.user._id });
+        const explist = await expense.find({ userid: req.user._id }).populate({path:'ledger',select:'ledger'}).sort({date:-1});
+        const ledgere = await ledger.find({ userid: req.user._id }).select({ledger:1});
         console.timeEnd("time taken by userdata");
         if (explist) {
             res.status(200).json({
@@ -100,4 +82,4 @@ const userdata = async (req, res) => {
 
 
 
-module.exports = { userdata, userledger, addexpense, datafetcheditexp};
+module.exports = { userdata, userledger, addexpense};

@@ -1,29 +1,6 @@
-const model = require('../modals/exp_schema')
+const Expense = require('../modals/exp_schema')
 
 
-
-// *--------------------------------------
-// * expense single data delete logic
-// *--------------------------------------
-const deleteoneexp = async (req, res) => {
-    const _id = req.body.id;
-    console.log(req.body.id);
-    try {
-        const result = await model.findByIdAndDelete({ _id });
-        if (result) {
-            res.status(203).json({
-                msg: "data deleted",
-                data: result
-            })
-        } else {
-            res.json({
-                msg: "something went wrong in db"
-            })
-        }
-    } catch (error) {
-        res.status(501).json({ msg: error })
-    }
-}
 
 // *--------------------------------------
 // * Multiple expense single data delete logic
@@ -38,7 +15,7 @@ const delmany = async (req, res) => {
     }
 
     try {
-        const result = await model.deleteMany({
+        const result = await Expense.deleteMany({
             _id: { $in: id }
         });
         // console.log("from delete many",result);
@@ -62,11 +39,12 @@ const delmany = async (req, res) => {
 // *--------------------------------------
 const updateexp = async (req, res) => {
     const { _id, ledger, date, amount, narration } = req.body;
+    // console.log(req.body);
     try {
-        const result = await model.findByIdAndUpdate({ _id }, { ledger, date, amount, narration });
+        const result = await Expense.findByIdAndUpdate({ _id }, { ledger, date, amount, narration });
         if (result) {
             res.status(201).json({
-                msg: "data deleted"
+                msg: "data Updated Successfully"
             })
         } else {
             res.status(402).json({
@@ -74,13 +52,13 @@ const updateexp = async (req, res) => {
             })
         }
     } catch (error) {
+        console.log(error);
         res.status(502).json({
             msg: error
         })
     }
-
 }
 
 
 
-module.exports = { deleteoneexp, delmany, updateexp };
+module.exports = {delmany, updateexp };

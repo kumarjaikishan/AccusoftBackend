@@ -1,4 +1,3 @@
-const model = require('../modals/exp_schema')
 const user = require('../modals/login_schema')
 const ledmodel = require('../modals/ledger_schema')
 const NodeCache = require("node-cache");
@@ -7,7 +6,6 @@ const bcrypt = require('bcrypt');
 const cloudinary = require('cloudinary').v2;
 const fs = require('fs');
 const jwt = require('jsonwebtoken');
-const { clearScreenDown } = require('readline');
 
 cloudinary.config({
     cloud_name: 'dusxlxlvm',
@@ -251,25 +249,6 @@ const signup = async (req, res) => {
 }
 
 
-// *--------------------------------------
-// * Admin Logic
-// *--------------------------------------
-const admin = async (req, res) => {
-    // console.log(req.user);
-    if (!req.user.isadmin) {
-        res.status(401).json({ msg: "unautorized Access, Not Admin" })
-    }
-    try {
-        const query = await model.find().sort({ userid: -1 });
-        if (query) {
-            res.status(200).json({
-                explist: query
-            })
-        }
-    } catch (error) {
-        res.status(501).json({ msg: error })
-    }
-}
 
 const updateuserdetail = async (req, res) => {
     // console.log(req.user);
@@ -293,4 +272,4 @@ const updateuserdetail = async (req, res) => {
     }
 }
 
-module.exports = { admin, signup, photo, login, updateuserdetail };
+module.exports = {  signup, photo, login, updateuserdetail };
