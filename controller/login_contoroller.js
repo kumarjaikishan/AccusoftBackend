@@ -279,10 +279,10 @@ const verify = async (req, res) => {
         const query = await user.findByIdAndUpdate({ _id: req.query.id }, { isverified: true });
        
         if(query){
-            res.status(201).json({
-                msg:`Hi ${query.name},Email verified Successfully,Now You can Proceed to Login`
-            })
-            // res.status(201).send(`<html><h2> Hi ${query.name}, Email Verified Successfully </h2></html>`)
+            // res.status(201).json({
+            //     msg:`Hi ${query.name},Email verified Successfully,Now You can Proceed to Login`
+            // })
+            res.status(201).send(`<html><h2> Hi ${query.name} , Email Verified Successfully, <button onclick="location.href = 'https://frontend-exp-man.vercel.app';">Login Now</button> </h2></html>`)
         }
     } catch (error) {
         res.status(500).json({
