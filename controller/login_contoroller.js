@@ -230,7 +230,6 @@ const signup = async (req, res, next) => {
             const ledger2 = new ledmodel({ userid: result._id.toString(), ledger: "other" });
             const save1 = await ledger1.save();
             const save2 = await ledger2.save();
-            req.body.userid = result._id.toString();
             // console.log(result._id.toString());
             next();
             // res.status(201).json({
@@ -276,12 +275,11 @@ const updateuserdetail = async (req, res) => {
 }
 
 const verify = async (req, res) => {
-    console.log("verify route", req.query.id);
     try {
         const query = await user.findByIdAndUpdate({ _id: req.query.id }, { isverified: true });
         if(query){
             res.status(201).json({
-                msg:'User Email verified Successfully,Now <a href="https://frontend-exp-man.vercel.app" target="_blank">Click Here</a> to proceed'
+                msg:`Hi ${query.name},Email verified Successfully,Now You can Proceed to Login`
             })
         }
     } catch (error) {

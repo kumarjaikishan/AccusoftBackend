@@ -10,37 +10,38 @@ const transporter = nodemailer.createTransport({
     }
 });
 
-const emailmiddleware = async (req, res) => {
-    console.log(req.body.userid);
+const emailmiddleware = async (req, res,next) => {
     try {
         const query = await user.findOne({ email: req.body.email });
         // console.log(query);
         if (query.isverified) {
-            console.log(query.isverified);
-            // next();
+            next();
         } else {
-            // Define the email options
             const mailOptions = {
-                from: 'kumar.jaikishan0@gmail.com',
+                from: 'Jai kishan',
                 to: query.email,
                 subject: 'Email Verification-Expense Management system',
                 html: `Hi ${query.name}, please <a href="https://backend-exp-man.vercel.app/verify?id=${query._id}" target="_blank">Click Here</a>  to Verify your Email,   Thanks for Joining Us, from Jai kishan(Developer)`
             };
-
+        
             // Send the email
             transporter.sendMail(mailOptions, (error, info) => {
                 if (error) {
                     console.error('Error sending email:', error);
                 } else {
-                   res.status(201).json({
-                    msg:"Email sent, check your inbox",
-                   })
+                    res.status(201).json({
+                        msg: "Email sent, check your inbox",
+                    })
                     console.log('Email sent:', info.response);
                 }
             });
         }
     } catch (error) {
-
+        res.status(500).json({
+            msg: "something went wrong",
+            error
+        })
     }
 }
+
 module.exports = emailmiddleware;
