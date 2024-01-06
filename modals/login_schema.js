@@ -22,10 +22,6 @@ const log = new mongo.Schema({
         type: String,
         required: true
     },
-    date: {
-        type: String,
-        required: true
-    },
     imgsrc: {
         type: String,
         default:""
@@ -38,7 +34,7 @@ const log = new mongo.Schema({
         type: Boolean,
         default: false
     }
-})
+}, { timestamps: true })
 
 // secure the password
 log.pre("save", async function () {

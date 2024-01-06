@@ -160,7 +160,7 @@ const login = async (req, res) => {
         const dfg = await generateToken(result);
         const fbf = result._id.toString();
         result.password = undefined;
-        result.date = undefined;
+        result.createdAt = undefined;
         result._id = undefined;
         result.phone = undefined;
         res.status(200).json({
@@ -211,7 +211,7 @@ const login = async (req, res) => {
 // *--------------------------------------
 const signup = async (req, res, next) => {
     // console.log(req.body);
-    const { name, email, phone, password, date } = req.body;
+    const { name, email, phone, password } = req.body;
     if (!name || !email || !phone || !password || !date) {
         console.log("all fieldse are req");
         res.json({
@@ -220,7 +220,7 @@ const signup = async (req, res, next) => {
     }
     try {
         // console.log(fgrd,dsd);
-        const query = new user({ name, email, phone, password, date });
+        const query = new user({ name, email, phone, password });
         const result = await query.save();
         // console.log(result);
         if (result) {

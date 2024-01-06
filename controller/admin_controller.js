@@ -43,9 +43,9 @@ const alluser = async (req, res) => {
 // *--------------------------------------
 const userupdate = async (req, res) => {
     // console.log(req.body);
-    const { id, name, phone, email, admin } = req.body
+    const { id, name, phone, email, admin,verified } = req.body
     try {
-        const query = await user.findByIdAndUpdate({ _id: id }, { name, phone, email, isadmin: admin });
+        const query = await user.findByIdAndUpdate({ _id: id }, { name, phone, email, isadmin: admin, isverified:verified });
         if (query) {
             res.status(200).json({
                 msg: "user updated successfully"
