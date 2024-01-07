@@ -24,7 +24,7 @@ const addexpense = async (req, res) => {
             })
         } 
     } catch (error) {
-        res.status(500).json({ msg: "something went wrong in db" })
+        res.status(500).json({ msg: error.message })
     }
 }
 
@@ -46,7 +46,7 @@ const userledger = async (req, res) => {
             })
         }
     } catch (error) {
-        res.status(501).json({ msg: error })
+        res.status(501).json({ msg: error.message })
     }
 }
 
@@ -58,11 +58,11 @@ const userdata = async (req, res) => {
     if (!req.user._id ) {
         return res.status(422).json({ msg: "UserId is Required " })
     }
-    console.time("time taken by userdata");
+    // console.time("time taken by userdata");
     try {
         const explist = await expense.find({ userid: req.user._id }).populate({path:'ledger',select:'ledger'}).sort({date:-1});
         const ledgere = await ledger.find({ userid: req.user._id }).select({ledger:1});
-        console.timeEnd("time taken by userdata");
+        // console.timeEnd("time taken by userdata");
         if (explist) {
             res.status(200).json({
                 user: req.user,
@@ -71,9 +71,8 @@ const userdata = async (req, res) => {
             })
         }
     } catch (error) {
-        console.log(error);
         res.status(500).json({
-            msg: error
+            msg: error.message
         })
     }
 }

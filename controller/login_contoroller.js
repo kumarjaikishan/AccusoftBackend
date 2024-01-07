@@ -224,28 +224,19 @@ const signup = async (req, res, next) => {
         })
     }
     try {
-        // console.log(fgrd,dsd);
         const query = new user({ name, email, phone, password });
         const result = await query.save();
-        // console.log(result);
         if (result) {
-            // console.log(result);
             myCache.del("allusers");
             const ledger1 = new ledmodel({ userid: result._id.toString(), ledger: "general" });
             const ledger2 = new ledmodel({ userid: result._id.toString(), ledger: "other" });
             const save1 = await ledger1.save();
             const save2 = await ledger2.save();
-            // console.log(result._id.toString());
             next();
-            // res.status(201).json({
-            //     msg: "SignUp successfully",
-            //     data: result
-            // })
         }
     } catch (error) {
-        console.log(error);
         res.status(500).json({
-            msg: error
+            msg: error.message
         })
     }
 

@@ -18,19 +18,16 @@ const delmany = async (req, res) => {
         const result = await Expense.deleteMany({
             _id: { $in: id }
         });
-        // console.log("from delete many",result);
-        if (result) {
-            res.status(201).json({
-                msg: "Deleted Successfully",
-                data: result
-            })
-        } else {
-            res.status(401).json({
-                msg: "something went wrong in db"
-            })
+        if (!result) {
+            throw new Error("Something went Wrong");
         }
+        res.status(201).json({
+            msg: "Deleted Successfully",
+            data: result
+        })
+
     } catch (error) {
-        res.status(501).json({ msg: error })
+        res.status(501).json({ msg: error.message })
     }
 }
 
@@ -42,23 +39,21 @@ const updateexp = async (req, res) => {
     // console.log(req.body);
     try {
         const result = await Expense.findByIdAndUpdate({ _id }, { ledger, date, amount, narration });
-        if (result) {
-            res.status(201).json({
-                msg: "Updated Successfully"
-            })
-        } else {
-            res.status(402).json({
-                msg: "something went wrong in db"
-            })
+        if (!result) {
+            throw new Error("Expense Not Updated");
         }
+
+        res.status(201).json({
+            msg: "Updated Successfully"
+        })
+
     } catch (error) {
-        console.log(error);
         res.status(502).json({
-            msg: error
+            msg: error.message
         })
     }
 }
 
 
 
-module.exports = {delmany, updateexp };
+module.exports = { delmany, updateexp };
