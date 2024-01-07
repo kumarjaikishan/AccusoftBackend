@@ -21,7 +21,7 @@ const delmany = async (req, res) => {
         // console.log("from delete many",result);
         if (result) {
             res.status(201).json({
-                msg: "data deleted",
+                msg: "Deleted Successfully",
                 data: result
             })
         } else {
@@ -44,7 +44,7 @@ const updateexp = async (req, res) => {
         const result = await Expense.findByIdAndUpdate({ _id }, { ledger, date, amount, narration });
         if (result) {
             res.status(201).json({
-                msg: "data Updated Successfully"
+                msg: "Updated Successfully"
             })
         } else {
             res.status(402).json({

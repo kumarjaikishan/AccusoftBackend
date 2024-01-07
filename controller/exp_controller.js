@@ -11,8 +11,8 @@ const addexpense = async (req, res) => {
     // const userid = req.userid
     // console.log(ledger, date, amount, narration, userid);
     if (!ledger || !date || !amount || !narration) {
-        return res.status(203).json({
-            msg: "all fields are required"
+        return res.status(422).json({
+            msg: "All fields are required"
         })
     }
     try {
@@ -20,13 +20,9 @@ const addexpense = async (req, res) => {
         const result = await query.save();
         if (result) {
             res.status(201).json({
-                msg: "data inserted successfully"
+                msg: "Expense Added"
             })
-        } else {
-            res.json({
-                msg: "something went wrong in db"
-            })
-        }
+        } 
     } catch (error) {
         res.status(500).json({ msg: "something went wrong in db" })
     }
@@ -39,7 +35,7 @@ const addexpense = async (req, res) => {
 const userledger = async (req, res) => {
     const { userledger } = req.body;
     if (userledger.length < 1) {
-        return res.status(401).json({ msg: "ledger can't be empty" })
+        return res.status(422).json({ msg: "Ledger can't be empty" })
     }
     try {
         const result = await user.findByIdAndUpdate({ _id: req.userid }, { ledger: userledger });
@@ -59,6 +55,9 @@ const userledger = async (req, res) => {
 // * User Login Logic
 // *--------------------------------------
 const userdata = async (req, res) => {
+    if (!req.user._id ) {
+        return res.status(422).json({ msg: "UserId is Required " })
+    }
     console.time("time taken by userdata");
     try {
         const explist = await expense.find({ userid: req.user._id }).populate({path:'ledger',select:'ledger'}).sort({date:-1});
