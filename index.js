@@ -34,7 +34,7 @@ router.route('/addexpense').post(authmiddlewre, expense.addexpense); //used
 router.route('/userdata').get(authmiddlewre, expense.userdata); //used
 router.route('/userledger').post(authmiddlewre, expense.userledger);    //used     
 
-router.route('/delmany').delete(authmiddlewre, deletee.delmany); //used
+router.route('/delmany').post(authmiddlewre, deletee.delmany); //used
 router.route('/updateexp').post(authmiddlewre, deletee.updateexp); //used
 
 router.route('/addledger').post(authmiddlewre, ledger.addledger); //used
