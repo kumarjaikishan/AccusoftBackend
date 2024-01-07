@@ -7,11 +7,11 @@ const Expense = require('../modals/exp_schema')
 // *--------------------------------------
 const delmany = async (req, res) => {
     const id = req.body.id;
-    console.log(id);
+    // console.log(id);
     if (!id) {
-        res.json({
-            msg: "Send some id",
-        })
+        return res.status(400).json({
+            msg: "Send some valid ids",
+        });
     }
 
     try {
@@ -19,15 +19,15 @@ const delmany = async (req, res) => {
             _id: { $in: id }
         });
         if (!result) {
-            throw new Error("Something went Wrong");
+            throw new Error("Deletion failed");
         }
-        res.status(201).json({
+       return res.status(200).json({
             msg: "Deleted Successfully",
             data: result
         })
 
     } catch (error) {
-        res.status(501).json({ msg: error.message })
+       return res.status(500).json({ msg: error.message })
     }
 }
 
@@ -43,12 +43,11 @@ const updateexp = async (req, res) => {
             throw new Error("Expense Not Updated");
         }
 
-        res.status(201).json({
+       return res.status(200).json({
             msg: "Updated Successfully"
-        })
-
+        });
     } catch (error) {
-        res.status(502).json({
+        return  res.status(500).json({
             msg: error.message
         })
     }

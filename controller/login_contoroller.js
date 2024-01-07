@@ -130,7 +130,7 @@ const login = async (req, res) => {
         myCache.set("allusers", JSON.stringify(usersdata));
     }
     const { email, password } = req.body;
-    if(!email || !password){
+    if (!email || !password) {
         return res.status(422).json({
             msg: "Input Required"
         })
@@ -217,7 +217,7 @@ const login = async (req, res) => {
 const signup = async (req, res, next) => {
     // console.log(req.body);
     const { name, email, phone, password } = req.body;
-    if (!name || !email || !phone || !password ) {
+    if (!name || !email || !phone || !password) {
         console.log("all fieldse are req");
         res.json({
             msg: "all fields are required"
@@ -235,7 +235,7 @@ const signup = async (req, res, next) => {
             next();
         }
     } catch (error) {
-        res.status(500).json({
+        return res.status(500).json({
             msg: error.message
         })
     }
@@ -249,7 +249,7 @@ const updateuserdetail = async (req, res) => {
     const { name, phone } = req.body;
     if (!name || !phone) {
         console.log("all fieldse are req");
-        res.json({
+        return res.json({
             msg: "all fields are required"
         })
     }
@@ -260,9 +260,9 @@ const updateuserdetail = async (req, res) => {
             return res.status(200).json({
                 msg: "Profile Detail Updated Successfully"
             })
-        } 
+        }
     } catch (error) {
-        res.status(500).json({
+        return res.status(500).json({
             msg: error
         })
     }
@@ -271,17 +271,17 @@ const updateuserdetail = async (req, res) => {
 const verify = async (req, res) => {
     try {
         const query = await user.findByIdAndUpdate({ _id: req.query.id }, { isverified: true });
-       
-        if(!query){
-            res.status(400).json({
-                msg:"UserId is not Valid"
+
+        if (!query) {
+            return res.status(400).json({
+                msg: "UserId is not Valid"
             })
         }
-        res.status(201).send(`<html><h2> Hi ${query.name} , Email Verified Successfully, <button onclick="location.href = 'https://frontend-exp-man.vercel.app';">Login Now</button> </h2></html>`)
+        return res.status(201).send(`<html><h2> Hi ${query.name} , Email Verified Successfully, <button onclick="location.href = 'https://frontend-exp-man.vercel.app';">Login Now</button> </h2></html>`)
     } catch (error) {
-        res.status(500).json({
-            msg:"User Email not  verified",
-            error:error
+        return res.status(500).json({
+            msg: "User Email not  verified",
+            error: error
         })
     }
 }

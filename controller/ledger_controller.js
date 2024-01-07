@@ -14,12 +14,11 @@ const addledger = async (req, res) => {
         const query = new ledmodel({ userid: req.userid, ledger: req.body.ledger });
         const result = await query.save();
         console.log(result);
-        res.status(200).json({
+        return res.status(200).json({
             msg: "Ledger added Successfully"
         })
     } catch (error) {
-        console.log(error);
-        res.status(500).json({ msg: error.message })
+        return res.status(500).json({ msg: error.message })
     }
 }
 
@@ -39,12 +38,11 @@ const updateledger = async (req, res) => {
         if (!query) {
             throw new Error("Ledger Id not Valid");
         }
-        res.status(200).json({
+        return res.status(200).json({
             msg: "Ledger Updated Successfully"
         })
     } catch (error) {
-        console.log(error);
-        res.status(501).json({ msg: error.message })
+        return res.status(500).json({ msg: error.message })
     }
 }
 
@@ -67,11 +65,11 @@ const deleteledger = async (req, res) => {
         if (!result) {
             throw new Error("Ledger Id not Valid");
         }
-        res.status(200).json({
+        return res.status(200).json({
             msg: "Ledger Deleted Successfully"
         })
     } catch (error) {
-        res.status(501).json({ msg: error.message })
+        return res.status(500).json({ msg: error.message })
     }
 }
 

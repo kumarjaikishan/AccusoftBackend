@@ -9,12 +9,12 @@ const allexpense = async (req, res) => {
     // console.log(req.user);
     try {
         const query = await expense.find().populate([{ path: 'userid', select: "name" }, { path: 'ledger', select: 'ledger' }]).sort({ date: -1 });
-        res.status(200).json({
+       return res.status(200).json({
             explist: query
         })
 
     } catch (error) {
-        res.status(501).json({ msg:  error.message })
+      return  res.status(500).json({ msg:  error.message })
     }
 }
 
@@ -25,13 +25,13 @@ const alluser = async (req, res) => {
     // console.log(req.user);
     try {
         const query = await user.find().select({ password: 0 }).sort({ date: -1 });
-        if (query) {
-            res.status(200).json({
+        
+          return  res.status(200).json({
                 users: query
             })
-        }
+       
     } catch (error) {
-        res.status(501).json({ msg:  error.message })
+       return res.status(500).json({ msg:  error.message })
     }
 }
 
@@ -51,12 +51,12 @@ const userupdate = async (req, res) => {
         if (!query) {
             throw new Error("something went wrong");
         }
-            res.status(200).json({
+          return  res.status(200).json({
                 msg: "user updated successfully"
             })
        
     } catch (error) {
-        res.status(501).json({ msg: error.message })
+      return  res.status(500).json({ msg: error.message })
     }
 }
 
@@ -80,7 +80,7 @@ const removeuser = async (req, res) => {
             })
         }
     } catch (error) {
-        res.status(501).json({ msg:  error.message })
+       return res.status(500).json({ msg:  error.message })
     }
 }
 
