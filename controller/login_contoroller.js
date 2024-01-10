@@ -223,6 +223,12 @@ const signup = async (req, res, next) => {
             msg: "all fields are required"
         })
     }
+    const checkemail = await user.findOne({email});
+    if(checkemail){
+        return res.status(400).json({
+            msg: "Email Already Exists"
+        })
+    }
     try {
         const query = new user({ name, email, phone, password });
         const result = await query.save();
