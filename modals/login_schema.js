@@ -9,7 +9,7 @@ const log = new mongo.Schema({
     },
     email: {
         type: String,
-        required: true,
+        required: [true, "Email is required"],
         unique: true,
         index:true
     },
@@ -41,7 +41,7 @@ log.pre("save", async function () {
     // console.log(this);
     const user = this;
     if (!user.isModified("password")) {
-        next();
+       return next();
     }
     try {
         const saltRound = await bcrypt.genSalt(10);

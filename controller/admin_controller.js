@@ -1,6 +1,7 @@
 // const expense = require('../modals/exp_schema')
 const user = require('../modals/login_schema')
 const expense = require('../modals/exp_schema')
+const ledger = require('../modals/ledger_schema')
 
 // *--------------------------------------
 // * Admin get all user expense data Logic
@@ -74,6 +75,7 @@ const removeuser = async (req, res) => {
     try {
         const query = await user.findByIdAndDelete({ _id: id });
         const exp = await expense.remove({ userid: id });
+        const ledg = await ledger.remove({ userid: id });
         if (query) {
             res.status(200).json({
                 msg: "user updated successfully"
