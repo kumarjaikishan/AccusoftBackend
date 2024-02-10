@@ -274,7 +274,7 @@ const emailmiddleware = async (req, res, next) => {
                                                                                     style="font-size: 22px; line-height: 35.2px;">Hi,
                                                                                     <span style="line-height: 22.4px;"><span
                                                                                             style="line-height: 22.4px;"><strong><span
-                                                                                                    style="color: #3598db; line-height: 22.4px;">${query.name}</span></strong>
+                                                                                                    style="color: #3598db; line-height: 22.4px; text-transform: uppercase;">${query.name}</span></strong>
                                                                                         </span>
                                                                                     </span>
                                                                                 </span>
