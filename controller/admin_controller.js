@@ -2,89 +2,72 @@
 const user = require('../modals/login_schema')
 const expense = require('../modals/exp_schema')
 const ledger = require('../modals/ledger_schema')
+const asyncHandler = require('../utils/asyncHandler')
+
 
 // *--------------------------------------
 // * Admin get all user expense data Logic
 // *--------------------------------------
-const allexpense = async (req, res) => {
+const allexpense = asyncHandler(async (req, res,next) => {
     // console.log(req.user);
-    try {
-        const query = await expense.find().populate([{ path: 'userid', select: "name" }, { path: 'ledger', select: 'ledger' }]).sort({ date: -1 });
-       return res.status(200).json({
-            explist: query
-        })
-
-    } catch (error) {
-      return  res.status(500).json({ msg:  error.message })
-    }
-}
+    const query = await expense.find().populate([{ path: 'userid', select: "name" }, { path: 'ledger', select: 'ledger' }]).sort({ date: -1 });
+    return res.status(200).json({
+        explist: query
+    })
+})
 
 // *--------------------------------------
 // * Admin get all user Logic
 // *--------------------------------------
-const alluser = async (req, res) => {
+const alluser = asyncHandler(async (req, res,next) => {
     // console.log(req.user);
-    try {
-        const query = await user.find().select({ password: 0 }).sort({ date: -1 });
-        
-          return  res.status(200).json({
-                users: query
-            })
-       
-    } catch (error) {
-       return res.status(500).json({ msg:  error.message })
-    }
-}
+    const query = await user.find().select({ password: 0 }).sort({ date: -1 });
+
+    return res.status(200).json({
+        users: query
+    })
+
+})
 
 // *--------------------------------------
 // * Admin user data update Logic
 // *--------------------------------------
-const userupdate = async (req, res) => {
+const userupdate = asyncHandler(async (req, res,next) => {
     // console.log(req.body);
     const { id, name, phone, email, admin, verified } = req.body;
     if (!(id, name, phone, email, admin, verified)) {
-        return res.status(422).json({
-            msg: "All fields are required"
-        })
+        return next({ status: 422, message: "All Fields are Required" });
     }
-    try {
-        const query = await user.findByIdAndUpdate({ _id: id }, { name, phone, email, isadmin: admin, isverified: verified });
-        if (!query) {
-            throw new Error("something went wrong");
-        }
-          return  res.status(200).json({
-                msg: "user updated successfully"
-            })
-       
-    } catch (error) {
-      return  res.status(500).json({ msg: error.message })
+
+    const query = await user.findByIdAndUpdate({ _id: id }, { name, phone, email, isadmin: admin, isverified: verified });
+    if (!query) {
+        return next({ status: 422, message: "Id Incorrect" });
     }
-}
+    return res.status(200).json({
+        msg: "user updated successfully"
+    })
+})
 
 // *--------------------------------------
 // * Admin user delete & user Expense Delete Logic
 // *--------------------------------------
-const removeuser = async (req, res) => {
+const removeuser = asyncHandler(async (req, res, next) => {
     // console.log(req.body);
     const { id } = req.body
     if (!id) {
-        return res.status(422).json({
-            msg: "ID is required"
+        return next({ status: 422, message: "Id is Required" });
+    }
+
+    const query = await user.findByIdAndDelete({ _id: id });
+    const exp = await expense.remove({ userid: id });
+    const ledg = await ledger.remove({ userid: id });
+    if (query) {
+        res.status(200).json({
+            msg: "user updated successfully"
         })
     }
-    try {
-        const query = await user.findByIdAndDelete({ _id: id });
-        const exp = await expense.remove({ userid: id });
-        const ledg = await ledger.remove({ userid: id });
-        if (query) {
-            res.status(200).json({
-                msg: "user updated successfully"
-            })
-        }
-    } catch (error) {
-       return res.status(500).json({ msg:  error.message })
-    }
-}
+
+})
 
 
 

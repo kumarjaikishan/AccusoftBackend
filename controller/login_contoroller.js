@@ -6,6 +6,7 @@ const bcrypt = require('bcrypt');
 const cloudinary = require('cloudinary').v2;
 const fs = require('fs');
 const jwt = require('jsonwebtoken');
+const asyncHandler = require('../utils/asyncHandler')
 
 cloudinary.config({
     cloud_name: 'dusxlxlvm',
@@ -121,7 +122,12 @@ const photo = async (req, res) => {
 // *--------------------------------------
 // * User Login 1st method with nodecache Logic
 // *--------------------------------------
-const login = async (req, res) => {
+const login = async (req, res, next) => {
+    const { email, password } = req.body;
+    if (!email || !password) {
+        return next({ status: 400, message: "All Fields are Required" });
+    }
+
     let usersdata;
     if (myCache.has("allusers")) {
         usersdata = JSON.parse(myCache.get("allusers"));
@@ -129,19 +135,13 @@ const login = async (req, res) => {
         usersdata = await user.find({});
         myCache.set("allusers", JSON.stringify(usersdata));
     }
-    const { email, password } = req.body;
-    if (!email || !password) {
-        return res.status(422).json({
-            msg: "Input Required"
-        })
-    }
 
     const result = await usersdata.find((hel) => {
         return hel.email == req.body.email
     });
-
+    //    console.log("result",result);
     if (!result) {
-        return res.status(400).json({ msg: "Invalid Credientials" });
+        return next({ status: 400, message: "Email not found" });
     }
     // console.log("password match: ", await bcrypt.compare(password, result.password));
     const generateToken = async (result) => {
@@ -168,13 +168,14 @@ const login = async (req, res) => {
         result.createdAt = undefined;
         result._id = undefined;
         result.phone = undefined;
-        res.status(200).json({
+        return res.status(200).json({
             msg: "Login Successful",
             token: dfg,
             userId: fbf
         });
+
     } else {
-        res.status(400).json({ msg: "Invalid Email or Passowrd" });
+        return next({ status: 400, message: "Incorrect Password" });
     }
 }
 
@@ -214,65 +215,45 @@ const login = async (req, res) => {
 // *--------------------------------------
 // * User SignUp Logic
 // *--------------------------------------
-const signup = async (req, res, next) => {
+const signup = asyncHandler(async (req, res, next) => {
     // console.log(req.body);
     const { name, email, phone, password } = req.body;
     if (!name || !email || !phone || !password) {
-        console.log("all fieldse are req");
-        res.json({
-            msg: "all fields are required"
-        })
+        return next({ status: 400, message: "all fields are required" });
     }
-    const checkemail = await user.findOne({email});
-    if(checkemail){
-        return res.status(400).json({
-            msg: "Email Already Exists"
-        })
+    const checkemail = await user.findOne({ email });
+    if (checkemail) {
+        return next({ status: 400, message: "Email Already Exists" });
     }
-    try {
-        const query = new user({ name, email, phone, password });
-        const result = await query.save();
-        if (result) {
-            myCache.del("allusers");
-            const ledger1 = new ledmodel({ userid: result._id.toString(), ledger: "general" });
-            const ledger2 = new ledmodel({ userid: result._id.toString(), ledger: "other" });
-            const save1 = await ledger1.save();
-            const save2 = await ledger2.save();
-            next();
-        }
-    } catch (error) {
-        return res.status(500).json({
-            msg: error.message
-        })
+    const query = new user({ name, email, phone, password });
+    const result = await query.save();
+    if (result) {
+        myCache.del("allusers");
+        const ledger1 = new ledmodel({ userid: result._id.toString(), ledger: "general" });
+        const ledger2 = new ledmodel({ userid: result._id.toString(), ledger: "other" });
+        const save1 = await ledger1.save();
+        const save2 = await ledger2.save();
+        next();
     }
-
-}
-
+})
 
 
-const updateuserdetail = async (req, res) => {
+
+const updateuserdetail = asyncHandler(async (req, res,next) => {
     // console.log(req.user);
     const { name, phone } = req.body;
     if (!name || !phone) {
-        console.log("all fieldse are req");
-        return res.json({
-            msg: "all fields are required"
+        return next({ status: 400, message: "All Fields are Required" });
+    }
+
+    const query = await user.findByIdAndUpdate({ _id: req.userid }, { name, phone })
+    if (query) {
+        return res.status(200).json({
+            msg: "Profile Detail Updated Successfully"
         })
     }
-    try {
-        const query = await user.findByIdAndUpdate({ _id: req.userid }, { name, phone })
-        if (query) {
-            // console.log(query);
-            return res.status(200).json({
-                msg: "Profile Detail Updated Successfully"
-            })
-        }
-    } catch (error) {
-        return res.status(500).json({
-            msg: error
-        })
-    }
-}
+
+})
 
 const verify = async (req, res) => {
     try {

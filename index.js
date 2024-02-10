@@ -13,12 +13,14 @@ const authmiddlewre = require('./middleware/auth_middleware')
 const adminmiddleware = require('./middleware/admin_middleware')
 const upload = require('./middleware/multer_middleware')
 const emailauth = require('./middleware/email_auth')
+const errorHandle = require('./utils/error_util')
 
 app.use(express.json());
 require('./conn/conn')
 require('./test');
 app.use(cors());
 app.use(router);
+app.use(errorHandle);
 
 app.get('/', (req, res) => {
   res.status(200).send("This is From Expense Manager Backend, Created by Jai kishan")

@@ -3,9 +3,8 @@ const User = require('../modals/login_schema');
 
 const authmiddlewre = async (req, res, next) => {
     const bearertoken = req.header('Authorization');
-    // console.log(bearertoken);
     if(!bearertoken){
-        return res.status(401).json({msg:"Unauthorizes HTTP, token not provided"})
+        return next({ status: 401, message: "Unauthorizes HTTP, token not provided" });
     }
 
     try {
@@ -14,7 +13,6 @@ const authmiddlewre = async (req, res, next) => {
 
         const userdata = await User.findOne({email:verified.email}).select({password:0});
         userdata.date=undefined;
-        // console.log(userdata);
         req.user=userdata;
         req.userid=userdata._id.toString();
         req.token=token;
