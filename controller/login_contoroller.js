@@ -139,7 +139,7 @@ const login = async (req, res, next) => {
     const result = await usersdata.find((hel) => {
         return hel.email == req.body.email
     });
-    //    console.log("result",result);
+       console.log("result",result);
     if (!result) {
         return next({ status: 400, message: "User not found" });
     }
