@@ -128,7 +128,7 @@ const setpassword = async (req, res, next) => {
     const hash_password = await bcrypt.hash(password, saltRound);
     // console.log(hash_password);
     await user.updateOne({ _id: query._id }, { password: hash_password, temptoken: '' })
-
+    myCache.del("allusers");
     return res.status(200).json({
       msg: 'Password Updated Successfully'
     })
@@ -159,7 +159,7 @@ const login = async (req, res, next) => {
   const result = await usersdata.find((hel) => {
     return hel.email == req.body.email
   });
-  console.log("result", result);
+  // console.log("result", result);
   if (!result) {
     return next({ status: 400, message: "User not found" });
   }
