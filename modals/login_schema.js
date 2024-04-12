@@ -22,6 +22,10 @@ const log = new mongo.Schema({
         type: String,
         required: true
     },
+    temptoken: {
+        type: String,
+        default: ""
+    },
     imgsrc: {
         type: String,
         default:""

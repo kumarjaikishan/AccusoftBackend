@@ -5,6 +5,7 @@ const myCache = new NodeCache();
 const bcrypt = require('bcrypt');
 const cloudinary = require('cloudinary').v2;
 const fs = require('fs');
+const sendemail = require('../utils/sendemail')
 const jwt = require('jsonwebtoken');
 const removePhotoBySecureUrl = require('../utils/cloudinaryremove')
 const asyncHandler = require('../utils/asyncHandler')
@@ -14,41 +15,6 @@ cloudinary.config({
   api_key: '214119961949842',
   api_secret: "kAFLEVAA5twalyNYte001m_zFno"
 });
-
-
-// photo 2nd method
-const photo2 = async (req, res) => {
-  console.log(req.body);
-  const old = req.body.oldimage
-  const newly = req.body.newimage
-  const userid = req.body.userid
-  try {
-    const result = await user.findByIdAndUpdate({ _id: userid }, { imgsrc: newly });
-    if (result) {
-      if (old === "https://res.cloudinary.com/dusxlxlvm/image/upload/v1699090690/just_yoljye.png") {
-        // console.log("pehle se hi");
-        res.status(201).json({
-          msg: "photo updated"
-        })
-      } else {
-        const hu = old.split('/');
-        const lastwala = hu[hu.length - 1].split('.')[0];
-        await cloudinary.uploader.destroy(lastwala, (error, result) => {
-          // console.log(error,result);
-          res.status(201).json({
-            msg: "photo updated"
-          })
-        })
-
-      }
-    }
-
-  } catch (error) {
-    res.status(501).json({
-      msg: error
-    })
-  }
-}
 
 // *--------------------------------------
 // * User Profile pic Upload Logic
@@ -105,6 +71,46 @@ const photo = async (req, res) => {
     })
   }
 
+}
+const random = async (len) => {
+  const rand = 'abcdefghijklmnopqrstuvwxyz123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+  let result = '';
+  for (let i = 0; i < len; i++) {
+    const randomIndex = Math.floor(Math.random() * rand.length);
+    result += rand[randomIndex];
+  }
+  return result;
+};
+
+const checkmail = async (req, res, next) => {
+  console.log(req.body);
+  if (req.body.email == "") {
+    return next({ status: 400, message: 'Please send Email' });
+  }
+  try {
+    const query = await user.findOne({ email: req.body.email });
+    if (!query) {
+      return next({ status: 400, message: 'Email not Found' });
+    }
+    const temptoken = await random(20);
+    await user.findByIdAndUpdate(query._id, { temptoken: temptoken });
+    const msg = `Hi <b>${query.name}</b>,
+    <br>
+    This mail is regards to your Forget password request. 
+    <br><br>
+    <a href="https://accusoft.vercel.app/resetpassword/${temptoken}" style="display: inline-block; padding: 4px 20px; background-color: #007bff; color: #fff; text-decoration: none; letter-spacing: 1px;; border-radius: 5px;">Reset Password</a>
+    `
+    await sendemail(query.email, 'Forget Password || Battlefiesta', msg);
+    // await addJobToQueue(query.email, 'Forget Password || Battlefiesta', msg);
+    // await addtoqueue(query.email, 'Forget Password', msg)
+
+    return res.status(200).json({
+      message: 'Reset Link sent to Email'
+    })
+  } catch (error) {
+    console.log(error);
+    return next({ status: 500, message: error });
+  }
 }
 
 
@@ -554,4 +560,4 @@ const verify = async (req, res) => {
   }
 }
 
-module.exports = { signup, photo, login, updateuserdetail, verify };
+module.exports = { signup, checkmail, photo, login, updateuserdetail, verify };
