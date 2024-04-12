@@ -29,7 +29,8 @@ app.get('/', (req, res) => {
 router.route('/signup').post(login.signup,emailauth);    //used
 router.route('/login').post(emailauth,login.login);      //used
 router.route('/verify').get(login.verify);      //used
-router.route('/checkmail').post(login.checkmail);    
+router.route('/checkmail').post(login.checkmail);  
+router.route('/setpassword').post(login.setpassword);      //used  
 router.route('/photo').post(authmiddlewre, upload.single('image'), login.photo); //used
 router.route('/updateuserdetail').post(authmiddlewre, login.updateuserdetail); //used
 

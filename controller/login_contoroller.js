@@ -113,6 +113,31 @@ const checkmail = async (req, res, next) => {
   }
 }
 
+const setpassword = async (req, res, next) => {
+  const token = req.query.token;
+  const password = req.body.password;
+  //  console.log(token,password);
+  try {
+    const query = await user.findOne({ temptoken: token });
+
+    if (!query) {
+      return next({ status: 400, message: 'This link has been Expired' });
+    }
+
+    const saltRound = await bcrypt.genSalt(10);
+    const hash_password = await bcrypt.hash(password, saltRound);
+    // console.log(hash_password);
+    await user.updateOne({ _id: query._id }, { password: hash_password, temptoken: '' })
+
+    return res.status(200).json({
+      msg: 'Password Updated Successfully'
+    })
+  } catch (error) {
+    console.log(error);
+    return next({ status: 500, message: error });
+  }
+}
+
 
 // *--------------------------------------
 // * User Login 1st method with nodecache Logic
@@ -560,4 +585,4 @@ const verify = async (req, res) => {
   }
 }
 
-module.exports = { signup, checkmail, photo, login, updateuserdetail, verify };
+module.exports = { signup, setpassword,checkmail, photo, login, updateuserdetail, verify };
