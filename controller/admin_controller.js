@@ -21,7 +21,7 @@ const allexpense = asyncHandler(async (req, res,next) => {
 // *--------------------------------------
 const alluser = asyncHandler(async (req, res,next) => {
     // console.log(req.user);
-    const query = await user.find().select({ password: 0 }).sort({ date: -1 });
+    const query = await user.find().select({ password: 0 }).sort({ createdAt:-1 });
 
     return res.status(200).json({
         users: query
