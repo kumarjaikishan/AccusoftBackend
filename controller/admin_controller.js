@@ -8,7 +8,7 @@ const asyncHandler = require('../utils/asyncHandler')
 // *--------------------------------------
 // * Admin get all user expense data Logic
 // *--------------------------------------
-const allexpense = asyncHandler(async (req, res,next) => {
+const allexpense = asyncHandler(async (req, res, next) => {
     // console.log(req.user);
     const query = await expense.find().populate([{ path: 'userid', select: "name" }, { path: 'ledger', select: 'ledger' }]).sort({ date: -1 });
     return res.status(200).json({
@@ -19,9 +19,9 @@ const allexpense = asyncHandler(async (req, res,next) => {
 // *--------------------------------------
 // * Admin get all user Logic
 // *--------------------------------------
-const alluser = asyncHandler(async (req, res,next) => {
+const alluser = asyncHandler(async (req, res, next) => {
     // console.log(req.user);
-    const query = await user.find().select({ password: 0 }).sort({ createdAt:-1 });
+    const query = await user.find().select({ password: 0 }).sort({ createdAt: -1 });
 
     return res.status(200).json({
         users: query
@@ -32,7 +32,7 @@ const alluser = asyncHandler(async (req, res,next) => {
 // *--------------------------------------
 // * Admin user data update Logic
 // *--------------------------------------
-const userupdate = asyncHandler(async (req, res,next) => {
+const userupdate = asyncHandler(async (req, res, next) => {
     // console.log(req.body);
     const { id, name, phone, email, admin, verified } = req.body;
     if (!(id, name, phone, email, admin, verified)) {
@@ -68,7 +68,18 @@ const removeuser = asyncHandler(async (req, res, next) => {
     }
 
 })
+// *--------------------------------------
+// * Admin user delete & user Expense Delete Logic
+// *--------------------------------------
+const admindash = asyncHandler(async (req, res, next) => {
+    const usersCount = await user.countDocuments();
+    const expensesCount = await expense.countDocuments();
+    return res.status(200).json({
+        userlen: usersCount,
+        explen: expensesCount
+    });
+})
 
 
 
-module.exports = { allexpense, alluser, userupdate, removeuser };
+module.exports = { admindash, allexpense, alluser, userupdate, removeuser };

@@ -45,6 +45,7 @@ router.route('/addledger').post(authmiddlewre, ledger.addledger); //used
 router.route('/updateledger').post(authmiddlewre, ledger.updateledger);    //used     
 router.route('/deleteledger').post(authmiddlewre, ledger.deleteledger); //used
 
+router.route('/admindash').get(authmiddlewre, adminmiddleware, admin.admindash); //used
 router.route('/adminexp').get(authmiddlewre, adminmiddleware, admin.allexpense); //used
 router.route('/adminuser').get(authmiddlewre, adminmiddleware, admin.alluser); //used
 router.route('/adminuserupdate').post(authmiddlewre, adminmiddleware, admin.userupdate); //used
