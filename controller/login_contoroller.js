@@ -23,7 +23,7 @@ cloudinary.config({
 const photo = async (req, res) => {
   if (!req.file) {
     return res.status(400).json({
-      msg: 'No file uploaded.'
+      message: 'No file uploaded.'
     });
   }
   // console.log("from final",req.body);
@@ -34,7 +34,7 @@ const photo = async (req, res) => {
       // console.log(error, result);
       if (error) {
         return res.status(500).json({
-          msg: error
+          message: error
         });
       }
 
@@ -59,7 +59,7 @@ const photo = async (req, res) => {
       }
 
       res.status(201).json({
-        msg: "photo updated",
+        message: "photo updated",
         url: imageurl
       })
 
@@ -67,7 +67,7 @@ const photo = async (req, res) => {
     })
   } catch (error) {
     res.status(501).json({
-      msg: error
+      message: error
     })
   }
 
@@ -130,7 +130,7 @@ const setpassword = async (req, res, next) => {
     await user.updateOne({ _id: query._id }, { password: hash_password, temptoken: '' })
     myCache.del("allusers");
     return res.status(200).json({
-      msg: 'Password Updated Successfully'
+      message: 'Password Updated Successfully'
     })
   } catch (error) {
     console.log(error);
@@ -189,7 +189,7 @@ const login = async (req, res, next) => {
     result._id = undefined;
     result.phone = undefined;
     return res.status(200).json({
-      msg: "Login Successful",
+      message: "Login Successful",
       token: dfg,
       userId: fbf
     });
@@ -239,7 +239,7 @@ const updateuserdetail = asyncHandler(async (req, res, next) => {
   const query = await user.findByIdAndUpdate({ _id: req.userid }, { name, phone })
   if (query) {
     return res.status(200).json({
-      msg: "Profile Detail Updated Successfully"
+      message: "Profile Detail Updated Successfully"
     })
   }
 
@@ -251,7 +251,7 @@ const verify = async (req, res) => {
 
     if (!query) {
       return res.status(400).json({
-        msg: "UserId is not Valid"
+        message: "UserId is not Valid"
       })
     }
     // return res.status(201).send(`<html><h2> Hi ${query.name} , Email Verified Successfully, <button onclick="location.href = 'https://frontend-exp-man.vercel.app';">Login Now</button> </h2></html>`)
@@ -579,7 +579,7 @@ const verify = async (req, res) => {
         </html>`)
   } catch (error) {
     return res.status(500).json({
-      msg: "User Email not  verified",
+      message: "User Email not  verified",
       error: error
     })
   }

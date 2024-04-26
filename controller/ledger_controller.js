@@ -14,7 +14,7 @@ const addledger = asyncHandler(async (req, res,next) => {
     const result = await query.save();
     console.log(result);
     return res.status(200).json({
-        msg: "Ledger added Successfully"
+        message: "Ledger added Successfully"
     })
 })
 
@@ -33,7 +33,7 @@ const updateledger = asyncHandler(async (req, res,next) => {
         return next({ status: 400, message: "Ledger Id not Valid" });
     }
     return res.status(200).json({
-        msg: "Ledger Updated Successfully"
+        message: "Ledger Updated Successfully"
     })
 })
 
@@ -54,7 +54,7 @@ const deleteledger = asyncHandler(async (req, res,next) => {
             return next({ status: 400, message: "Id not Valid" });
         }
         return res.status(200).json({
-            msg: "Ledger Deleted Successfully"
+            message: "Ledger Deleted Successfully"
         })
   
 })

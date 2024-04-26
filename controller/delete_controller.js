@@ -19,7 +19,7 @@ const delmany = asyncHandler(async (req, res,next) => {
         return next({ status: 422, message: "Deletion failed" });
     }
     return res.status(200).json({
-        msg: "Deleted Successfully",
+        message: "Deleted Successfully",
         data: result
     })
 })
@@ -36,7 +36,7 @@ const updateexp = asyncHandler(async (req, res,next) => {
     }
 
     return res.status(200).json({
-        msg: "Updated Successfully"
+        message: "Updated Successfully"
     });
 })
 

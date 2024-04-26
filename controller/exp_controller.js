@@ -15,7 +15,7 @@ const addexpense = asyncHandler(async (req, res,next) => {
     const result = await query.save();
     if (result) {
         return res.status(201).json({
-            msg: "Expense Added"
+            message: "Expense Added"
         })
     }
 })
@@ -33,7 +33,7 @@ const userledger = asyncHandler(async (req, res,next) => {
     const result = await user.findByIdAndUpdate({ _id: req.userid }, { ledger: userledger });
     if (result) {
         return res.json({
-            msg: "ledger sync",
+            message: "ledger sync",
             data: result
         })
     }

@@ -44,7 +44,7 @@ const userupdate = asyncHandler(async (req, res,next) => {
         return next({ status: 422, message: "Id Incorrect" });
     }
     return res.status(200).json({
-        msg: "user updated successfully"
+        message: "user updated successfully"
     })
 })
 
@@ -63,7 +63,7 @@ const removeuser = asyncHandler(async (req, res, next) => {
     const ledg = await ledger.remove({ userid: id });
     if (query) {
         res.status(200).json({
-            msg: "user updated successfully"
+            message: "user updated successfully"
         })
     }
 

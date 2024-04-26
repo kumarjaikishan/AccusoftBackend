@@ -33,20 +33,20 @@ const cloudnary = async (req, res, next) => {
                 } else {
                     res.status(500).json({
                         success: false,
-                        msg: "Something went wrong during updating"
+                        message: "Something went wrong during updating"
                     })
                 }
             } else {
                 res.status(500).json({
                     success: false,
-                    msg: "Something went wrong during file uploading"
+                    message: "Something went wrong during file uploading"
                 })
             }
         })
     } catch (error) {
         res.status(400).json({
             success: false,
-            msg: "something went wrong"
+            message: "something went wrong"
         });
     }
 

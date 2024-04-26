@@ -500,7 +500,7 @@ const emailmiddleware = async (req, res, next) => {
                     console.error('Error sending email:', error);
                 } else {
                     res.status(201).json({
-                        msg: "Email sent, check your inbox",
+                        message: "Email sent, check your inbox",
                     })
                     console.log('Email sent:', info.response);
                 }
@@ -508,7 +508,7 @@ const emailmiddleware = async (req, res, next) => {
         }
     } catch (error) {
         res.status(500).json({
-            msg: "something went wrong",
+            message: "something went wrong",
             error
         })
     }
