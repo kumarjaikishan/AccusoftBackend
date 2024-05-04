@@ -21,9 +21,9 @@ const emailmiddleware = async (req, res, next) => {
             next();
         } else {
             const mailOptions = {
-                from: 'Jai kishan',
+                from: 'Accusoft <kumar.jaikishan0@gmail.com>',
                 to: query.email,
-                subject: 'Email Verification-Expense Management system',
+                subject: 'Email Verification | Accusoft',
                 // html: `Hi ${query.name}, please <a href="https://backend-exp-man.vercel.app/api/verify?id=${query._id}" target="_blank">Click Here</a>  to Verify your Email,   Thanks for Joining Us, from Jai kishan(Developer)`
                 html: `<!DOCTYPE HTML
                 PUBLIC "-//W3C//DTD XHTML 1.0 Transitional //EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
