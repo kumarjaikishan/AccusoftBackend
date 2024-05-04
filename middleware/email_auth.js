@@ -24,7 +24,7 @@ const emailmiddleware = async (req, res, next) => {
                 from: 'Jai kishan',
                 to: query.email,
                 subject: 'Email Verification-Expense Management system',
-                // html: `Hi ${query.name}, please <a href="https://backend-exp-man.vercel.app/verify?id=${query._id}" target="_blank">Click Here</a>  to Verify your Email,   Thanks for Joining Us, from Jai kishan(Developer)`
+                // html: `Hi ${query.name}, please <a href="https://backend-exp-man.vercel.app/api/verify?id=${query._id}" target="_blank">Click Here</a>  to Verify your Email,   Thanks for Joining Us, from Jai kishan(Developer)`
                 html: `<!DOCTYPE HTML
                 PUBLIC "-//W3C//DTD XHTML 1.0 Transitional //EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
             <html xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml"
@@ -274,7 +274,7 @@ const emailmiddleware = async (req, res, next) => {
                                                                     <td style="overflow-wrap:break-word;word-break:break-word;padding:10px;font-family:'Cabin',sans-serif;"
                                                                         align="left">
                                                                         <div align="center">
-                                                                            <a href="https://backend-exp-man.vercel.app/verify?id=${query._id}"
+                                                                            <a href="https://backend-exp-man.vercel.app/api/verify?id=${query._id}"
                                                                                 target="_blank" class="v-button"
                                                                                 style="box-sizing: border-box;display: inline-block;text-decoration: none;-webkit-text-size-adjust: none;text-align: center;color: #FFFFFF; background-color: #ff6600; border-radius: 4px;-webkit-border-radius: 4px; -moz-border-radius: 4px; width:65%; max-width:100%; overflow-wrap: break-word; word-break: break-word; word-wrap:break-word; mso-border-alt: none;font-size: 14px;">
                                                                                 <span
