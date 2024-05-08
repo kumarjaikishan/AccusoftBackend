@@ -98,9 +98,9 @@ const checkmail = async (req, res, next) => {
     <br>
     This mail is regards to your Forget password request. 
     <br><br>
-    <a href="https://accusoft.vercel.app/resetpassword/${temptoken}" style="display: inline-block; padding: 4px 20px; background-color: #007bff; color: #fff; text-decoration: none; letter-spacing: 1px;; border-radius: 5px;">Reset Password</a>
+    <a href="https://accusoft.battlefiesta.in/resetpassword/${temptoken}" style="display: inline-block; padding: 4px 20px; background-color: #007bff; color: #fff; text-decoration: none; letter-spacing: 1px;; border-radius: 5px;">Reset Password</a>
     `
-    await sendemail(query.email, 'Forget Password || Battlefiesta', msg);
+    await sendemail(query.email, 'Forget Password || Accusoft', msg);
     // await addJobToQueue(query.email, 'Forget Password || Battlefiesta', msg);
     // await addtoqueue(query.email, 'Forget Password', msg)
 
