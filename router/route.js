@@ -6,6 +6,7 @@ const expense = require("../controller/exp_controller");
 const deletee = require("../controller/delete_controller");
 const ledger = require("../controller/ledger_controller");
 const admin = require("../controller/admin_controller");
+const slow = require("../controller/slow_controller");
 const authmiddlewre = require('../middleware/auth_middleware')
 const adminmiddleware = require('../middleware/admin_middleware')
 const upload = require('../middleware/multer_middleware')
@@ -41,6 +42,9 @@ router.route('/adminuserupdate').post(authmiddlewre, adminmiddleware, admin.user
 router.route('/removeuser').post(authmiddlewre, adminmiddleware, admin.removeuser); //used
 router.route('/deletemanyexp').post(authmiddlewre, adminmiddleware, deletee.delmany); //used
 router.route('/adminupdateexp').post(authmiddlewre, adminmiddleware, deletee.updateexp); //used
+
+router.route('/stillslow').post(authmiddlewre,adminmiddleware, slow.stillslow); //used
+router.route('/slow').post(authmiddlewre,adminmiddleware, slow.slow); //used
 
 
 
