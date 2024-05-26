@@ -35,7 +35,7 @@ const alluser = asyncHandler(async (req, res, next) => {
 const userupdate = asyncHandler(async (req, res, next) => {
     // console.log(req.body);
     const { id, name, phone, email, admin, verified } = req.body;
-    if (!(id, name, phone, email, admin, verified)) {
+    if (!(id, name, phone, email)) {
         return next({ status: 422, message: "All Fields are Required" });
     }
 
@@ -44,7 +44,7 @@ const userupdate = asyncHandler(async (req, res, next) => {
         return next({ status: 422, message: "Id Incorrect" });
     }
     return res.status(200).json({
-        message: "user updated successfully"
+        message: "User Updated "
     })
 })
 
