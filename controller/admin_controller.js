@@ -35,7 +35,7 @@ const alluser = asyncHandler(async (req, res, next) => {
 const userupdate = asyncHandler(async (req, res, next) => {
     // console.log(req.body);
     const { id, name, phone, email, admin, verified } = req.body;
-    if (!(id, name, phone, email)) {
+    if (id == null || name == null || phone == null || email == null || admin == null || verified == null) {
         return next({ status: 422, message: "All Fields are Required" });
     }
 
@@ -83,3 +83,4 @@ const admindash = asyncHandler(async (req, res, next) => {
 
 
 module.exports = { admindash, allexpense, alluser, userupdate, removeuser };
+
