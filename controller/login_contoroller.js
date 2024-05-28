@@ -138,6 +138,31 @@ const setpassword = async (req, res, next) => {
   }
 }
 
+const passreset = async (req, res, next) => {
+
+  try {
+    const temptoken = await random(20);
+    const query = await user.findByIdAndUpdate(req.userid, { temptoken: temptoken });
+    if (!query) {
+      return next({ status: 400, message: "UserId is Not Valid" });
+    }
+    const msg = `Hi <b>${req.user.name}</b>,
+    <br>
+    This mail is regards to your password reset request. 
+    <br><br>
+    <a href="https://accusoft.battlefiesta.in/resetpassword/${temptoken}" style="display: inline-block; padding: 4px 20px; background-color: #007bff; color: #fff; text-decoration: none; letter-spacing: 1px;; border-radius: 5px;">Reset Password</a>
+    `
+    await sendemail(query.email, 'Password Reset || Accusoft', msg);
+
+    return res.status(200).json({
+      message: 'Email sent',
+      extramessage: `Email sent successfully to ${req.user.email}, Kindly check inbox or spam to proceed further. Thankyou`
+    })
+  } catch (error) {
+    console.log(error);
+    return next({ status: 500, message: error });
+  }
+}
 
 // *--------------------------------------
 // * User Login 1st method with nodecache Logic
@@ -585,4 +610,4 @@ const verify = async (req, res) => {
   }
 }
 
-module.exports = { signup, setpassword,checkmail, photo, login, updateuserdetail, verify };
+module.exports = { signup,passreset, setpassword,checkmail, photo, login, updateuserdetail, verify };
