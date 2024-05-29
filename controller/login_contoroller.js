@@ -173,58 +173,50 @@ const login = async (req, res, next) => {
     return next({ status: 400, message: "All Fields are Required" });
   }
 
-  let usersdata;
-  if (myCache.has("allusers")) {
-    usersdata = JSON.parse(myCache.get("allusers"));
-  } else {
-    usersdata = await user.find({});
-    myCache.set("allusers", JSON.stringify(usersdata));
-  }
-
-  const result = await usersdata.find((hel) => {
-    return hel.email == req.body.email
-  });
-  // console.log("result", result);
-  if (!result) {
-    return next({ status: 400, message: "User not found" });
-  }
-  // console.log("password match: ", await bcrypt.compare(password, result.password));
-  const generateToken = async (result) => {
-    try {
-      return jwt.sign({
-        userId: result._id.toString(),
-        email: result.email,
-        isAdmin: result.isadmin
-      },
-        process.env.jwt_token,
-        {
-          expiresIn: "30d",
-        }
-      );
-    } catch (error) {
-      console.error(error);
+  try {
+    const isUser = await user.findOne({ email });
+    if (!isUser) {
+      return next({ status: 400, message: "User not found" });
     }
-  }
+    const generateToken = async (result) => {
+      try {
+        return jwt.sign({
+          userId: result._id.toString(),
+          email: result.email,
+          isAdmin: result.isadmin
+        },
+          process.env.jwt_token,
+          {
+            expiresIn: "30d",
+          }
+        );
+      } catch (error) {
+        console.error(error);
+      }
+    }
 
-  if (await bcrypt.compare(password, result.password)) {
-    const dfg = await generateToken(result);
-    const fbf = result._id.toString();
-    result.password = undefined;
-    result.createdAt = undefined;
-    result._id = undefined;
-    result.phone = undefined;
-    return res.status(200).json({
-      message: "Login Successful",
-      token: dfg,
-      userId: fbf
-    });
+    if (await bcrypt.compare(password, isUser.password)) {
+      const newToken = await generateToken(isUser);
+      const userIdString = isUser._id.toString();
+      isUser.password = undefined;
+      isUser.createdAt = undefined;
+      isUser._id = undefined;
+      isUser.phone = undefined;
+      return res.status(200).json({
+        message: "Login Successful",
+        token: newToken,
+        userId: userIdString,
+        isadmin: isUser.isadmin
+      });
 
-  } else {
-    return next({ status: 400, message: "Incorrect Password" });
+    } else {
+      return next({ status: 400, message: "Incorrect Password" });
+    }
+  } catch (error) {
+    console.log(error);
+    return next({ status: 400, message: error.message });
   }
 }
-
-
 
 
 // *--------------------------------------
@@ -610,4 +602,4 @@ const verify = async (req, res) => {
   }
 }
 
-module.exports = { signup,passreset, setpassword,checkmail, photo, login, updateuserdetail, verify };
+module.exports = { signup, passreset, setpassword, checkmail, photo, login, updateuserdetail, verify };

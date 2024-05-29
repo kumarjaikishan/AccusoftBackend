@@ -44,9 +44,6 @@ const userledger = asyncHandler(async (req, res,next) => {
 // * User Login Logic
 // *--------------------------------------
 const userdata = asyncHandler(async (req, res,next) => {
-    if (!req.user._id) {
-        return next({ status: 422, message: "UserId is Required" });
-    }
     // console.time("time taken by userdata");
     const explist = await expense.find({ userid: req.user._id }).populate({ path: 'ledger', select: 'ledger' }).sort({ date: -1 });
     const ledgere = await ledger.find({ userid: req.user._id }).select({ ledger: 1 });
