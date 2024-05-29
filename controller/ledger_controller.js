@@ -28,7 +28,7 @@ const addledger = asyncHandler(async (req, res,next) => {
 // *--------------------------------------
 const updateledger = asyncHandler(async (req, res,next) => {
     const { ledger_id, newledger } = req.body;
-    console.log("old id",ledger_id);
+    // console.log("old id",ledger_id);
 
     if (!ledger_id || !newledger) {
         return next({ status: 400, message: "All Fields are Required" });
@@ -36,7 +36,7 @@ const updateledger = asyncHandler(async (req, res,next) => {
 
     const isExists = await ledmodel.findOne({userid:req.userid, ledger:newledger});
     if(isExists){
-        return next({ status: 400, message: `${newledger} Already Exist` });
+        return next({ status: 421, message: `${newledger} Already Exist` });
     }
 
     //If want to merge ledgers
@@ -56,6 +56,25 @@ const updateledger = asyncHandler(async (req, res,next) => {
     return res.status(200).json({
         message: "Ledger Updated"
     })
+})
+
+const mergeledger = asyncHandler(async (req, res,next) => {
+    const { ledger_id, newledger } = req.body;
+   
+    if (!ledger_id || !newledger) {
+        return next({ status: 400, message: "All Fields are Required" });
+    }
+
+    const isExists = await ledmodel.findOne({userid:req.userid, ledger:newledger});
+   
+    //If want to merge ledgers
+    if(isExists){
+        const query = await expense.updateMany({ ledger: ledger_id }, { ledger: isExists._id });
+        const query2 = await ledmodel.deleteOne({ _id: ledger_id });
+        return res.status(200).json({
+            message: "Ledger Merged"
+        })
+    }
 })
 
 
@@ -82,4 +101,4 @@ const deleteledger = asyncHandler(async (req, res,next) => {
 
 
 
-module.exports = { addledger, deleteledger, updateledger };
+module.exports = { addledger, deleteledger, updateledger,mergeledger };
