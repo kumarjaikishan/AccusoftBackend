@@ -3,23 +3,25 @@ const User = require('../modals/login_schema');
 
 const authmiddlewre = async (req, res, next) => {
     const bearertoken = req.header('Authorization');
-    if(!bearertoken){
+    if (!bearertoken) {
         return next({ status: 401, message: "Unauthorizes HTTP, token not provided" });
     }
 
     try {
         const token = bearertoken.replace("Bearer", "").trim();
         const verified = jwt.verify(token, process.env.jwt_token);
+        // console.log(verified);
 
-        const userdata = await User.findOne({email:verified.email}).select({password:0});
-        userdata.date=undefined;
-        req.user=userdata;
-        req.userid=userdata._id.toString();
-        req.token=token;
+        req.user = verified;
+        req.userid = verified.userId;
+        req.token = token;
         next();
     } catch (error) {
         console.log(error);
-       return res.status(400).json({ message: error })
+        if (error.name === 'JsonWebTokenError') {
+            return res.status(401).json({ message: 'Invalid token' });
+        }
+        return res.status(400).json({ message: error.message })
     }
 }
 module.exports = authmiddlewre;

@@ -45,12 +45,13 @@ const userledger = asyncHandler(async (req, res,next) => {
 // *--------------------------------------
 const userdata = asyncHandler(async (req, res,next) => {
     // console.time("time taken by userdata");
+    const profile = await user.findOne({ _id: req.user._id });
     const explist = await expense.find({ userid: req.user._id }).populate({ path: 'ledger', select: 'ledger' }).sort({ date: -1 });
     const ledgere = await ledger.find({ userid: req.user._id }).select({ ledger: 1 });
     // console.timeEnd("time taken by userdata");
     if (explist) {
         return res.status(200).json({
-            user: req.user,
+            user: profile,
             explist: explist,
             ledger: ledgere
         })

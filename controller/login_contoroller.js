@@ -183,7 +183,9 @@ const login = async (req, res, next) => {
         return jwt.sign({
           userId: result._id.toString(),
           email: result.email,
-          isAdmin: result.isadmin
+          isAdmin: result.isadmin,
+          _id:result._id.toString(),
+          name:result.name
         },
           process.env.jwt_token,
           {
