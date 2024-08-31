@@ -26,6 +26,7 @@ router.route('/photo').post(authmiddlewre, upload.single('image'), login.photo);
 router.route('/updateuserdetail').post(authmiddlewre, login.updateuserdetail); //used
 
 router.route('/addexpense').post(authmiddlewre, expense.addexpense); //used
+router.route('/expdetail').post(authmiddlewre, expense.expdetail); //used
 router.route('/userdata').get(authmiddlewre, expense.userdata); //used
 router.route('/userledger').post(authmiddlewre, expense.userledger);    //used     
 
