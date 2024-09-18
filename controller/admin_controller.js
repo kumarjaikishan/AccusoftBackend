@@ -59,15 +59,15 @@ const removeuser = asyncHandler(async (req, res, next) => {
     }
 
     const query = await user.findByIdAndDelete({ _id: id });
-    const exp = await expense.remove({ userid: id });
-    const ledg = await ledger.remove({ userid: id });
+    const exp = await expense.deleteOne({ userid: id });
+    const ledg = await ledger.deleteOne({ userid: id });
     if (query) {
-        res.status(200).json({
+      return res.status(200).json({
             message: "User Removed"
         })
     }
-
 })
+
 // *--------------------------------------
 // * Admin user delete & user Expense Delete Logic
 // *--------------------------------------
