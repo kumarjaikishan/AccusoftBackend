@@ -583,7 +583,7 @@ const verify = async (req, res) => {
                       <p id='message'>
                         Congratulations <span id='naam'> ${query.name} </span>, your account has been successfully Verified.
                       </p>
-                      <a href="https://accusoft.vercel.app" id="contBtn">Continue SignIn</a>
+                      <a href="https://accusoft.battlefiesta.in" id="contBtn">Continue SignIn</a>
                     </div>
                   </div>
         
