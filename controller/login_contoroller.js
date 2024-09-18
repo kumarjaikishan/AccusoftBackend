@@ -98,7 +98,7 @@ const checkmail = async (req, res, next) => {
     <br>
     This mail is regards to your Forget password request. 
     <br><br>
-    <a href="https://accusoft.battlefiesta.in/resetpassword/${temptoken}" style="display: inline-block; padding: 4px 20px; background-color: #007bff; color: #fff; text-decoration: none; letter-spacing: 1px;; border-radius: 5px;">Reset Password</a>
+    <a href="${process.env.frontEndUrl}/resetpassword/${temptoken}" style="display: inline-block; padding: 4px 20px; background-color: #007bff; color: #fff; text-decoration: none; letter-spacing: 1px;; border-radius: 5px;">Reset Password</a>
     `
     await sendemail(query.email, 'Forget Password || Accusoft', msg);
     // await addJobToQueue(query.email, 'Forget Password || Battlefiesta', msg);
@@ -150,7 +150,7 @@ const passreset = async (req, res, next) => {
     <br>
     This mail is regards to your password reset request. 
     <br><br>
-    <a href="https://accusoft.battlefiesta.in/resetpassword/${temptoken}" style="display: inline-block; padding: 4px 20px; background-color: #007bff; color: #fff; text-decoration: none; letter-spacing: 1px;; border-radius: 5px;">Reset Password</a>
+    <a href="${process.env.frontEndUrl}/resetpassword/${temptoken}" style="display: inline-block; padding: 4px 20px; background-color: #007bff; color: #fff; text-decoration: none; letter-spacing: 1px;; border-radius: 5px;">Reset Password</a>
     `
     await sendemail(query.email, 'Password Reset || Accusoft', msg);
 
@@ -583,7 +583,7 @@ const verify = async (req, res) => {
                       <p id='message'>
                         Congratulations <span id='naam'> ${query.name} </span>, your account has been successfully Verified.
                       </p>
-                      <a href="https://accusoft.battlefiesta.in" id="contBtn">Continue SignIn</a>
+                      <a href="${process.env.frontEndUrl}" id="contBtn">Continue SignIn</a>
                     </div>
                   </div>
         

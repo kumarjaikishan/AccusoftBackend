@@ -273,7 +273,7 @@ const emailmiddleware = async (req, res, next) => {
                                                                     <td style="overflow-wrap:break-word;word-break:break-word;padding:10px;font-family:'Cabin',sans-serif;"
                                                                         align="left">
                                                                         <div align="center">
-                                                                            <a href="https://accusoft.battlefiesta.in/api/verify?id=${query._id}"
+                                                                            <a href="${process.env.frontEndUrl}/api/verify?id=${query._id}"
                                                                                 target="_blank" class="v-button"
                                                                                 style="box-sizing: border-box;display: inline-block;text-decoration: none;-webkit-text-size-adjust: none;text-align: center;color: #FFFFFF; background-color: #ff6600; border-radius: 4px;-webkit-border-radius: 4px; -moz-border-radius: 4px; width:65%; max-width:100%; overflow-wrap: break-word; word-break: break-word; word-wrap:break-word; mso-border-alt: none;font-size: 14px;">
                                                                                 <span
