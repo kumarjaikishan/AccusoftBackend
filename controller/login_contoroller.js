@@ -184,8 +184,8 @@ const login = async (req, res, next) => {
           userId: result._id.toString(),
           email: result.email,
           isAdmin: result.isadmin,
-          _id:result._id.toString(),
-          name:result.name
+          _id: result._id.toString(),
+          name: result.name
         },
           process.env.jwt_token,
           {
@@ -240,8 +240,8 @@ const signup = asyncHandler(async (req, res, next) => {
     myCache.del("allusers");
     const ledger1 = new ledmodel({ userid: result._id.toString(), ledger: "general" });
     const ledger2 = new ledmodel({ userid: result._id.toString(), ledger: "other" });
-    const save1 = await ledger1.save();
-    const save2 = await ledger2.save();
+    await ledger1.save();
+    await ledger2.save();
     next();
   }
 })
