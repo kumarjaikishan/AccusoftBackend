@@ -7,7 +7,7 @@ const cloudinary = require('cloudinary').v2;
 const fs = require('fs');
 const sendemail = require('../utils/sendemail')
 const jwt = require('jsonwebtoken');
-const removePhotoBySecureUrl = require('../utils/cloudinaryremove')
+const removePhotoBySecureUrl = require('../utils/cloudinaryremove');
 const asyncHandler = require('../utils/asyncHandler')
 
 cloudinary.config({

@@ -7,6 +7,7 @@ const deletee = require("../controller/delete_controller");
 const ledger = require("../controller/ledger_controller");
 const admin = require("../controller/admin_controller");
 const slow = require("../controller/slow_controller");
+const s3 = require("../controller/s3_controller");
 const authmiddlewre = require('../middleware/auth_middleware')
 const adminmiddleware = require('../middleware/admin_middleware')
 const upload = require('../middleware/multer_middleware')
@@ -24,6 +25,10 @@ router.route('/passreset').get(authmiddlewre,login.passreset);         //used
 router.route('/checkmail').post(login.checkmail);     //used
 router.route('/photo').post(authmiddlewre, upload.single('image'), login.photo); //used
 router.route('/updateuserdetail').post(authmiddlewre, login.updateuserdetail); //used
+
+router.route('/getsignedurl').post(authmiddlewre, upload.single('image'), s3.getsignedurl); //for getting presigned url for upload
+router.route('/status').post(authmiddlewre, upload.single('image'), s3.status); //for getting presigned url for upload
+
 
 router.route('/addexpense').post(authmiddlewre, expense.addexpense); //used
 router.route('/expdetail').post(authmiddlewre, expense.expdetail); //used
