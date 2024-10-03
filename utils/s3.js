@@ -30,6 +30,24 @@ async function putObjectUrl(filename, contentType) {
     return url;
 }
 
+async function putObjectUrls(files) {
+    const urls = [];
+
+    for (const file of files) {
+        const { filename, contentType } = file;
+        const command = new PutObjectCommand({
+            Bucket: 'accusoft-kishan',
+            Key: `accusoft/filehandle/${filename}`,
+            ContentType: contentType,
+        });
+        
+        const url = await getSignedUrl(s3client, command, { expiresIn: 3600 });
+        urls.push({ filename, url });
+    }
+
+    return urls;
+}
+
 async function deleteObjectUrl(path) {
     const command = new DeleteObjectCommand({
         Bucket: 'accusoft-kishan',
@@ -49,7 +67,7 @@ async function init() {
         // console.log("Put URL:", await putObjectUrl(`image-${Date.now()}.jpeg`, "image/jpeg"));
        
         // Example of deleting Object a signed URL for uploading
-        console.log("Delete:", await deleteObjectUrl('uploads/image-1727855902298.jpeg'));
+        // console.log("Delete:", await deleteObjectUrl('uploads/image-1727855902298.jpeg'));
 
         console.log(" ")
     } catch (error) {
@@ -57,5 +75,6 @@ async function init() {
     }
 }
 
-init();
+// init();
 
+module.exports = { putObjectUrls };

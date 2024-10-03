@@ -80,6 +80,9 @@ async function putObjectUrl(filename, contentType) {
     return url;
 }
 
+
+
+
 async function deleteObjectUrl(path) {
     const command = new DeleteObjectCommand({
         Bucket: 'accusoft-kishan',
