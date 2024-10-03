@@ -39,6 +39,7 @@ async function putObjectUrls(files) {
             Bucket: 'accusoft-kishan',
             Key: `accusoft/filehandle/${filename}`,
             ContentType: contentType,
+            // ContentDisposition: 'attachment',
         });
         
         const url = await getSignedUrl(s3client, command, { expiresIn: 3600 });

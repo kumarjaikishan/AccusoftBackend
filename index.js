@@ -1,4 +1,5 @@
 require('./conn/conn')
+require('./utils/nodecron')
 // require('./test');
 const express = require('express');
 const app = express();

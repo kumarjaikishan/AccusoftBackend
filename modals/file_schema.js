@@ -24,6 +24,9 @@ const fileSchema = new mongo.Schema({
         type: String,
         required: true
     }],
+    message: {
+        type: String,
+    },
     days: {
         type: Number,
         required: true
