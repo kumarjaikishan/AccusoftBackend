@@ -32,9 +32,11 @@ router.route('/status').post(authmiddlewre, s3.status); //for getting presigned 
 
 
 router.route('/createFileJob').post(authmiddlewre, filecontroller.createFileJob); //for getting presigned url for upload
+router.route('/updateJob').post(authmiddlewre, filecontroller.updateJob); //for getting presigned url for upload
 router.route('/updateoneTimer').post(authmiddlewre, filecontroller.updateoneTimer); //for getting presigned url for upload
 router.route('/updateTimerall').post(authmiddlewre, filecontroller.updateTimerall); //for getting presigned url for upload
 router.route('/deleteFileJob').post(authmiddlewre, filecontroller.deleteFileJob); //for getting presigned url for upload
+router.route('/deleteasset').post(authmiddlewre, filecontroller.deleteasset); //for getting presigned url for upload
 router.route('/getFilejobs').get(authmiddlewre, filecontroller.getFilejobs); //for getting presigned url for upload
 router.route('/createFileurl').post(authmiddlewre, filecontroller.createFileurl); //for getting presigned url for upload
 

@@ -78,4 +78,4 @@ async function init() {
 
 // init();
 
-module.exports = { putObjectUrls };
+module.exports = { putObjectUrls,deleteObjectUrl };

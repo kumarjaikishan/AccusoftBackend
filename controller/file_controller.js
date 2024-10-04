@@ -1,6 +1,6 @@
 const File = require('../modals/file_schema');
 // const sendEmail = require('../utils/email');
-const { putObjectUrls } = require('../utils/s3');
+const { putObjectUrls,deleteObjectUrl } = require('../utils/s3');
 const asyncHandler = require('../utils/asyncHandler')
 const sendemail = require('../utils/sendemail')
 
@@ -41,11 +41,37 @@ const createFileurl = asyncHandler(async (req, res) => {
 });
 
 const deleteFileJob = asyncHandler(async (req, res) => {
+    const job = await File.findById(req.body.jobid);
 
-    const filejobs = await File.findByIdAndDelete({ _id: req.body.jobid });  // You already created this function
+    if (!job) {
+        return res.status(404).json({ message: "Job not found" });
+    }
 
-    return res.status(201).json({ message: 'Job Deleted Successfull' });
+    await File.findByIdAndDelete(req.body.jobid);
+
+    // Delete associated files from S3
+    for (const urls of job.fileUrls) {
+        await deleteObjectUrl(urls.url.split('.com/')[1]); 
+    }
+
+    return res.status(200).json({ message: 'Job deleted successfully' });
 });
+const deleteasset = asyncHandler(async (req, res) => {
+    console.log(req.body)
+    console.log(req.body.url.split('.com/')[1])
+
+    if (!req.body.url) {
+        return res.status(404).json({ message: "url not found" });
+    }
+    await deleteObjectUrl(req.body.url.split('.com/')[1]); 
+    const which = await File.findById(req.body.jobid)
+    const filteredurl = which.fileUrls.filter((url,ind)=> req.body.index != ind);
+    await File.findByIdAndUpdate(req.body.jobid,{fileUrls:filteredurl})
+   
+    return res.status(200).json({ message: 'File deleted successfully' });
+});
+
+
 const getFilejobs = asyncHandler(async (req, res) => {
 
     const filejobs = await File.find({ userid: req.userid });  // You already created this function
@@ -94,6 +120,30 @@ const updateoneTimer = asyncHandler(async (req, res) => {
     });
 });
 
+const updateJob = asyncHandler(async (req, res) => {
+    // console.log(req.body)
+    const { emails, days, messagee } = req.body;
+
+    const newExpiryDate = new Date();
+    newExpiryDate.setDate(newExpiryDate.getDate() + parseInt(days));
+    if (req.body.files) {
+        const filepreviousUrl = await File.findById(req.body.jobid);
+        const updatedFileUrls = [...filepreviousUrl.fileUrls, ...req.body.files];
+        const fileJob = await File.findByIdAndUpdate(req.body.jobid, {
+            emailRecipients: emails, days, message: messagee,
+            expiryDate: newExpiryDate, fileUrls: updatedFileUrls
+        });
+    }
+
+    const fileJob = await File.findByIdAndUpdate(req.body.jobid, {
+        emailRecipients: emails, days, message: messagee, expiryDate: newExpiryDate
+    });
+
+    return res.status(201).json({
+        message: 'Job Updated',
+    });
+});
+
 
 // Cron job to send expired files when the expiry date has passed
 const sendExpiredFiles = async () => {
@@ -137,4 +187,4 @@ const sendExpiredFiles = async () => {
     }
 };
 
-module.exports = { createFileJob, deleteFileJob, getFilejobs, sendExpiredFiles, updateTimerall, createFileurl, updateoneTimer };
+module.exports = { createFileJob, updateJob,deleteasset, deleteFileJob, getFilejobs, sendExpiredFiles, updateTimerall, createFileurl, updateoneTimer };
