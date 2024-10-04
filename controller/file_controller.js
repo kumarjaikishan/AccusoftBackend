@@ -1,6 +1,6 @@
 const File = require('../modals/file_schema');
 // const sendEmail = require('../utils/email');
-const { putObjectUrls,deleteObjectUrl } = require('../utils/s3');
+const { putObjectUrls, deleteObjectUrl } = require('../utils/s3');
 const asyncHandler = require('../utils/asyncHandler')
 const sendemail = require('../utils/sendemail')
 
@@ -51,23 +51,23 @@ const deleteFileJob = asyncHandler(async (req, res) => {
 
     // Delete associated files from S3
     for (const urls of job.fileUrls) {
-        await deleteObjectUrl(urls.url.split('.com/')[1]); 
+        await deleteObjectUrl(urls.url.split('.com/')[1].split('%20').join(' '));
     }
 
     return res.status(200).json({ message: 'Job deleted successfully' });
 });
 const deleteasset = asyncHandler(async (req, res) => {
-    console.log(req.body)
-    console.log(req.body.url.split('.com/')[1])
+    // console.log(req.body)
+    // console.log(req.body.url.split('.com/')[1].split('%20').join(' '))
 
     if (!req.body.url) {
         return res.status(404).json({ message: "url not found" });
     }
-    await deleteObjectUrl(req.body.url.split('.com/')[1]); 
+    await deleteObjectUrl(req.body.url.split('.com/')[1].split('%20').join(' '));
     const which = await File.findById(req.body.jobid)
-    const filteredurl = which.fileUrls.filter((url,ind)=> req.body.index != ind);
-    await File.findByIdAndUpdate(req.body.jobid,{fileUrls:filteredurl})
-   
+    const filteredurl = which.fileUrls.filter((url, ind) => req.body.index != ind);
+    await File.findByIdAndUpdate(req.body.jobid, { fileUrls: filteredurl })
+
     return res.status(200).json({ message: 'File deleted successfully' });
 });
 
@@ -187,4 +187,4 @@ const sendExpiredFiles = async () => {
     }
 };
 
-module.exports = { createFileJob, updateJob,deleteasset, deleteFileJob, getFilejobs, sendExpiredFiles, updateTimerall, createFileurl, updateoneTimer };
+module.exports = { createFileJob, updateJob, deleteasset, deleteFileJob, getFilejobs, sendExpiredFiles, updateTimerall, createFileurl, updateoneTimer };
