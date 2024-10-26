@@ -15,12 +15,16 @@ const authmiddlewre = async (req, res, next) => {
         req.user = verified;
         req.userid = verified.userId;
         req.token = token;
+        
         next();
     } catch (error) {
-        console.log(error);
+        console.log("Error from Auth Middleware:",error.message);
         if (error.name === 'JsonWebTokenError') {
-            return res.status(401).json({ message: 'Invalid token' });
+            return res.status(401).json({ message: 'Invalid Token. Please log in again.' });
         }
+        if (error.name === 'TokenExpiredError') {
+            return res.status(401).json({ message: 'Your session has expired. Please log in again.' });
+          }
         return res.status(400).json({ message: error.message })
     }
 }

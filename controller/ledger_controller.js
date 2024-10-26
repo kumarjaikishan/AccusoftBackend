@@ -9,6 +9,7 @@ const addledger = asyncHandler(async (req, res,next) => {
     if (!req.userid || !req.body.ledger) {
         return next({ status: 400, message: "All Fields are Required" });
     }
+    return next({ status: 400, message: "All Fields are Required" });
 
     const isExists = await ledmodel.findOne({userid:req.userid, ledger:req.body.ledger});
     if(isExists){
