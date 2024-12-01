@@ -210,7 +210,8 @@ const login = async (req, res, next) => {
         message: "Login Successful",
         token: newToken,
         userId: userIdString,
-        isadmin: isUser.isadmin
+        isadmin: isUser.isadmin,
+         name:isUser.name
       });
 
     } else {
@@ -241,9 +242,9 @@ const signup = asyncHandler(async (req, res, next) => {
   if (result) {
     myCache.del("allusers");
     const ledger1 = new ledmodel({ userid: result._id.toString(), ledger: "general" });
-    // const ledger2 = new ledmodel({ userid: result._id.toString(), ledger: "other" });
+    const ledger2 = new ledmodel({ userid: result._id.toString(), ledger: "other" });
     await ledger1.save();
-    // await ledger2.save();
+    await ledger2.save();
     next();
   }
 })
