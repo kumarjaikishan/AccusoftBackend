@@ -15,19 +15,25 @@ const upload = require('../middleware/multer_middleware')
 const emailauth = require('../middleware/email_auth')
 
 app.get('/', (req, res) => {
-    res.status(200).send("This is From Expense Manager Backend, Created by Jai kishan")
-  })
+  res.status(200).send("This is From Expense Manager Backend, Created by Jai kishan")
+})
 
-router.route('/signup').post(login.signup,emailauth);    //used
-router.route('/login').post(emailauth,login.login);      //used
+router.route('/jwtcheck').get(authmiddlewre, (req, res) => {
+  res.status(201).json({
+    message: "ok"
+  })
+});
+
+router.route('/signup').post(login.signup, emailauth);    //used
+router.route('/login').post(emailauth, login.login);      //used
 router.route('/verify').get(login.verify);
 router.route('/setpassword').post(login.setpassword);         //used
-router.route('/passreset').get(authmiddlewre,login.passreset);         //used
+router.route('/passreset').get(authmiddlewre, login.passreset);         //used
 router.route('/checkmail').post(login.checkmail);     //used
 router.route('/photo').post(authmiddlewre, upload.single('image'), login.photo); //used
 router.route('/updateuserdetail').post(authmiddlewre, login.updateuserdetail); //used
 
-router.route('/getsignedurl').post(authmiddlewre,  s3.getsignedurl); //for getting presigned url for upload
+router.route('/getsignedurl').post(authmiddlewre, s3.getsignedurl); //for getting presigned url for upload
 router.route('/status').post(authmiddlewre, s3.status); //for getting presigned url for upload
 
 
@@ -62,9 +68,9 @@ router.route('/removeuser').post(authmiddlewre, adminmiddleware, admin.removeuse
 router.route('/deletemanyexp').post(authmiddlewre, adminmiddleware, deletee.delmany); //used
 router.route('/adminupdateexp').post(authmiddlewre, adminmiddleware, deletee.updateexp); //used
 
-router.route('/stillslow').post(authmiddlewre,adminmiddleware, slow.stillslow); //used
-router.route('/slow').post(authmiddlewre,adminmiddleware, slow.slow); //used
+router.route('/stillslow').post(authmiddlewre, adminmiddleware, slow.stillslow); //used
+router.route('/slow').post(authmiddlewre, adminmiddleware, slow.slow); //used
 
 
 
-module.exports= router;
+module.exports = router;
