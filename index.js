@@ -1,3 +1,4 @@
+require('dotenv').config();
 require('./conn/conn')
 require('./utils/nodecron')
 // require('./test');
