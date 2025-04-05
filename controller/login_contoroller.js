@@ -1,7 +1,5 @@
 const user = require('../modals/login_schema')
 const ledmodel = require('../modals/ledger_schema')
-const NodeCache = require("node-cache");
-const myCache = new NodeCache();
 const bcrypt = require('bcrypt');
 const cloudinary = require('cloudinary').v2;
 const fs = require('fs');
@@ -129,7 +127,6 @@ const setpassword = async (req, res, next) => {
     const hash_password = await bcrypt.hash(password, saltRound);
     // console.log(hash_password);
     await user.updateOne({ _id: query._id }, { password: hash_password, temptoken: '' })
-    myCache.del("allusers");
     return res.status(200).json({
       message: 'Password Updated Successfully'
     })
@@ -240,7 +237,6 @@ const signup = asyncHandler(async (req, res, next) => {
   const query = new user({ name, email, phone, password });
   const result = await query.save();
   if (result) {
-    myCache.del("allusers");
     const ledger1 = new ledmodel({ userid: result._id.toString(), ledger: "general" });
     const ledger2 = new ledmodel({ userid: result._id.toString(), ledger: "other" });
     await ledger1.save();
