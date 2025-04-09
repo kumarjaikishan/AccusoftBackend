@@ -48,7 +48,6 @@ const status = asyncHandler(async (req, res, next) => {
         const deleteQuery = await deleteObjectUrl(deleteKey);
     }
 
-    // This condition is not logically correct. Let's adjust it:
     if (oldurl !== "" && oldurl.indexOf('accusoft-kishan') === -1) {
         let arraye = [];
         arraye.push(oldurl);
