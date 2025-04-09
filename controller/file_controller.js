@@ -1,6 +1,6 @@
 const File = require('../modals/file_schema');
 // const sendEmail = require('../utils/email');
-const { putObjectUrls, deleteObjectUrl } = require('../utils/s3');
+// const { putObjectUrls, deleteObjectUrl } = require('../utils/s3');
 const asyncHandler = require('../utils/asyncHandler')
 const sendemail = require('../utils/sendemail')
 

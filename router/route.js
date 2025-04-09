@@ -7,8 +7,8 @@ const deletee = require("../controller/delete_controller");
 const ledger = require("../controller/ledger_controller");
 const admin = require("../controller/admin_controller");
 const slow = require("../controller/slow_controller");
-const s3 = require("../controller/s3_controller");
-const filecontroller = require("../controller/file_controller");
+// const s3 = require("../controller/s3_controller");
+// const filecontroller = require("../controller/file_controller");
 const authmiddlewre = require('../middleware/auth_middleware')
 const adminmiddleware = require('../middleware/admin_middleware')
 const upload = require('../middleware/multer_middleware')
@@ -33,18 +33,18 @@ router.route('/checkmail').post(login.checkmail);     //used
 router.route('/photo').post(authmiddlewre, upload.single('image'), login.photo); //used
 router.route('/updateuserdetail').post(authmiddlewre, login.updateuserdetail); //used
 
-router.route('/getsignedurl').post(authmiddlewre, s3.getsignedurl); //for getting presigned url for upload
-router.route('/status').post(authmiddlewre, s3.status); //for getting presigned url for upload
+// router.route('/getsignedurl').post(authmiddlewre, s3.getsignedurl); //for getting presigned url for upload
+// router.route('/status').post(authmiddlewre, s3.status); //for getting presigned url for upload
 
 
-router.route('/createFileJob').post(authmiddlewre, filecontroller.createFileJob); //for getting presigned url for upload
-router.route('/updateJob').post(authmiddlewre, filecontroller.updateJob); //for getting presigned url for upload
-router.route('/updateoneTimer').post(authmiddlewre, filecontroller.updateoneTimer); //for getting presigned url for upload
-router.route('/updateTimerall').post(authmiddlewre, filecontroller.updateTimerall); //for getting presigned url for upload
-router.route('/deleteFileJob').post(authmiddlewre, filecontroller.deleteFileJob); //for getting presigned url for upload
-router.route('/deleteasset').post(authmiddlewre, filecontroller.deleteasset); //for getting presigned url for upload
-router.route('/getFilejobs').get(authmiddlewre, filecontroller.getFilejobs); //for getting presigned url for upload
-router.route('/createFileurl').post(authmiddlewre, filecontroller.createFileurl); //for getting presigned url for upload
+// router.route('/createFileJob').post(authmiddlewre, filecontroller.createFileJob); //for getting presigned url for upload
+// router.route('/updateJob').post(authmiddlewre, filecontroller.updateJob); //for getting presigned url for upload
+// router.route('/updateoneTimer').post(authmiddlewre, filecontroller.updateoneTimer); //for getting presigned url for upload
+// router.route('/updateTimerall').post(authmiddlewre, filecontroller.updateTimerall); //for getting presigned url for upload
+// router.route('/deleteFileJob').post(authmiddlewre, filecontroller.deleteFileJob); //for getting presigned url for upload
+// router.route('/deleteasset').post(authmiddlewre, filecontroller.deleteasset); //for getting presigned url for upload
+// router.route('/getFilejobs').get(authmiddlewre, filecontroller.getFilejobs); //for getting presigned url for upload
+// router.route('/createFileurl').post(authmiddlewre, filecontroller.createFileurl); //for getting presigned url for upload
 
 
 router.route('/addexpense').post(authmiddlewre, expense.addexpense); //used
