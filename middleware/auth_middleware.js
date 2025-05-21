@@ -18,7 +18,7 @@ const authmiddlewre = async (req, res, next) => {
 
         next();
     } catch (error) {
-        console.log("Error from Auth Middleware:",error.name,":", error.message);
+        // console.log("Error from Auth Middleware:",error.name,":", error.message);
         if (error.name === 'JsonWebTokenError') {
             return next({ statusCode: 401, message: "Invalid Token"});
         }
