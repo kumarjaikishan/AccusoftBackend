@@ -1,4 +1,5 @@
 const File = require('../modals/file_schema');
+const { ApiError } = require('../utils/apierror');
 // const sendEmail = require('../utils/email');
 // const { putObjectUrls, deleteObjectUrl } = require('../utils/s3');
 const asyncHandler = require('../utils/asyncHandler')
@@ -32,7 +33,7 @@ const createFileurl = asyncHandler(async (req, res) => {
     const { files } = req.body;
 
     if (!files || files.length === 0) {
-        return next({ status: 400, message: 'No files provided' });
+         throw new ApiError(400, "No files provided");
     }
 
     const urls = await putObjectUrls(files);

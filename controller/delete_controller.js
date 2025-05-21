@@ -1,4 +1,5 @@
-const Expense = require('../modals/exp_schema')
+const Expense = require('../modals/exp_schema');
+const { ApiError } = require('../utils/apierror');
 const asyncHandler = require('../utils/asyncHandler')
 
 
@@ -9,14 +10,14 @@ const delmany = asyncHandler(async (req, res,next) => {
     const id = req.body.id;
     // console.log(id);
     if (!id) {
-        return next({ status: 422, message: "ID Required" });
+         throw new ApiError(422, "ID Required");
     }
 
     const result = await Expense.deleteMany({
         _id: { $in: id }
     });
     if (!result) {
-        return next({ status: 422, message: "Deletion failed" });
+         throw new ApiError(422, "Deletion failed");
     }
     return res.status(200).json({
         message: "Deleted Successfully",
@@ -32,7 +33,7 @@ const updateexp = asyncHandler(async (req, res,next) => {
 
     const result = await Expense.findByIdAndUpdate({ _id }, { ledger, date, amount, narration });
     if (!result) {
-        return next({ status: 422, message: "Expense not Updated"});
+         throw new ApiError(422, "Incorrect Expense Id");
     }
 
     return res.status(200).json({

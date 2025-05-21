@@ -1,10 +1,10 @@
 const jwt = require('jsonwebtoken');
-const User = require('../modals/login_schema');
+const { ApiError } = require('../utils/apierror');
 
 const authmiddlewre = async (req, res, next) => {
     const bearertoken = req.header('Authorization');
     if (!bearertoken) {
-        return next({ status: 401, message: "Unauthorizes HTTP, token not provided" });
+        return next({ statusCode: 401, message: "Unauthorizes HTTP, token not provided" });
     }
 
     try {
@@ -18,11 +18,14 @@ const authmiddlewre = async (req, res, next) => {
 
         next();
     } catch (error) {
-        console.log("Error from Auth Middleware:", error.message);
+        console.log("Error from Auth Middleware:",error.name,":", error.message);
         if (error.name === 'JsonWebTokenError') {
-            return res.status(401).json({ message: 'Invalid Token' });
+            return next({ statusCode: 401, message: "Invalid Token"});
         }
-        return res.status(400).json({ message: error.message })
+        if (error.name === 'TokenExpiredError') {
+            return next({ statusCode: 498, message: "jwt expired"});
+        }
+        return next({ statusCode: 400, message: error.message});
     }
 }
 module.exports = authmiddlewre;

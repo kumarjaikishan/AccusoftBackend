@@ -3,6 +3,7 @@ const user = require('../modals/login_schema')
 const expense = require('../modals/exp_schema')
 const ledger = require('../modals/ledger_schema')
 const asyncHandler = require('../utils/asyncHandler')
+const { ApiError } = require('../utils/apierror')
 
 
 // *--------------------------------------
@@ -36,12 +37,12 @@ const userupdate = asyncHandler(async (req, res, next) => {
     // console.log(req.body);
     const { id, name, phone, email, admin, verified } = req.body;
     if (id == null || name == null || phone == null || email == null || admin == null || verified == null) {
-        return next({ status: 422, message: "All Fields are Required" });
+      throw new ApiError(422, "All Fields are Required");
     }
 
     const query = await user.findByIdAndUpdate({ _id: id }, { name, phone, email, isadmin: admin, isverified: verified });
     if (!query) {
-        return next({ status: 422, message: "Id Incorrect" });
+        throw new ApiError(422, "Id Incorrect");
     }
     return res.status(200).json({
         message: "User Updated"
@@ -55,7 +56,7 @@ const removeuser = asyncHandler(async (req, res, next) => {
     // console.log(req.body);
     const { id } = req.body
     if (!id) {
-        return next({ status: 422, message: "Id is Required" });
+        throw new ApiError(422, "Id is Required");
     }
 
     const query = await user.findByIdAndDelete({ _id: id });

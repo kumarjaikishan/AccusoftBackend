@@ -2,15 +2,18 @@ const ledger = require('../modals/ledger_schema')
 const expense = require('../modals/exp_schema')
 const user = require('../modals/login_schema')
 const asyncHandler = require('../utils/asyncHandler')
+const { ApiError } = require('../utils/apierror')
 
 // *--------------------------------------
 // * User Registration Logic
 // *--------------------------------------
 const addexpense = asyncHandler(async (req, res, next) => {
+     throw new ApiError(400, "All Fields are Required");
     const { ledger, date, amount, narration } = req.body;
     if (!ledger || !date || !amount || !narration) {
-        return next({ status: 400, message: "All Fields are Required" });
+         throw new ApiError(400, "All Fields are Required");
     }
+     
     const query = new expense({ userid: req.userid, ledger, date, amount, narration });
     const result = await query.save();
     if (result) {
@@ -20,7 +23,7 @@ const addexpense = asyncHandler(async (req, res, next) => {
     }
 })
 const explist = asyncHandler(async (req, res, next) => {
-
+   
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 10;
 
@@ -41,7 +44,7 @@ const explist = asyncHandler(async (req, res, next) => {
 const expdetail = asyncHandler(async (req, res, next) => {
     const { expId } = req.body;
     if (!expId) {
-        return next({ status: 400, message: "Expense Id is Required" });
+        throw new ApiError(400, "Expense Id is Required");
     }
 
     const result = await expense.findOne({ _id: expId }).populate({ path: 'ledger', select: 'ledger' });
@@ -60,7 +63,7 @@ const expdetail = asyncHandler(async (req, res, next) => {
 const userledger = asyncHandler(async (req, res, next) => {
     const { userledger } = req.body;
     if (userledger.length < 1) {
-        return next({ status: 422, message: "Ledger Can't be Blank" });
+        throw new ApiError(422, "Ledger Can't be Blank");
     }
 
     const result = await user.findByIdAndUpdate({ _id: req.userid }, { ledger: userledger });

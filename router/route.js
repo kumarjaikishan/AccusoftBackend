@@ -51,7 +51,7 @@ router.route('/addexpense').post(authmiddlewre, expense.addexpense); //used
 router.route('/explist').get(authmiddlewre, expense.explist); //used
 router.route('/expdetail').post(authmiddlewre, expense.expdetail); //used
 router.route('/userdata').get(authmiddlewre, expense.userdata); //used
-router.route('/userledger').post(authmiddlewre, expense.userledger);    //used     
+router.route('/userledger').post(authmiddlewre, expense.userledger);    //used         
 
 router.route('/delmany').post(authmiddlewre, deletee.delmany); //used
 router.route('/updateexp').post(authmiddlewre, deletee.updateexp); //used
