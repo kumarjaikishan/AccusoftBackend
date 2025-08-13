@@ -3,18 +3,71 @@ const expense = require('../modals/exp_schema')
 const user = require('../modals/login_schema')
 const asyncHandler = require('../utils/asyncHandler')
 const { ApiError } = require('../utils/apierror')
+const dayjs = require('dayjs')
 
 // *--------------------------------------
 // * User Registration Logic
 // *--------------------------------------
+// const allexpe = asyncHandler(async (req, res, next) => {
+//   const query = await expense.find()
+//   for (const doc of query) {
+//     doc.date = dayjs(doc.date).toDate();
+//     await doc.save();
+//   }
+  
+//   return res.status(200).json({message:'updated'}); 
+// });
+
+// const allexpe = asyncHandler(async (req, res, next) => {
+//   await expense.updateMany(
+//     { date: { $type: "string" } }, // only update if date is stored as string
+//     [
+//       {
+//         $set: {
+//           date: {
+//             $dateFromString: { dateString: "$date" }
+//           }
+//         }
+//       }
+//     ]
+//   );
+
+//   res.status(200).json({ message: 'All string dates converted to Date objects' });
+// });
+
+const allexpe = asyncHandler(async (req, res, next) => {
+  await expense.updateMany(
+    { date: { $type: "string" } }, // only if date is stored as string
+    [
+      {
+        $set: {
+          date: {
+            $dateFromString: {
+              dateString: "$date",
+              timezone: "UTC" // ensures ISO normalization
+            }
+          }
+        }
+      }
+    ]
+  );
+
+  res.status(200).json({ message: 'All string dates converted to Date objects in UTC' });
+});
+
+
+
+
+
 const addexpense = asyncHandler(async (req, res, next) => {
-     throw new ApiError(400, "All Fields are Required");
+    //  throw new ApiError(400, "All Fields are Required");
     const { ledger, date, amount, narration } = req.body;
     if (!ledger || !date || !amount || !narration) {
-         throw new ApiError(400, "All Fields are Required");
+        throw new ApiError(400, "All Fields are Required");
     }
-     
-    const query = new expense({ userid: req.userid, ledger, date, amount, narration });
+
+    const query = new expense({ userid: req.userid, ledger, date:new Date(date).toISOString(), amount, narration });
+    console.log("new expense creadted",query)
     const result = await query.save();
     if (result) {
         return res.status(201).json({
@@ -22,15 +75,16 @@ const addexpense = asyncHandler(async (req, res, next) => {
         })
     }
 })
+
 const explist = asyncHandler(async (req, res, next) => {
-   
+
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 10;
 
     const start = (page - 1) * limit;
     const end = page * limit;
 
-    const items = await expense.find({ userid: req.userid }).populate({ path: 'ledger', select: 'ledger' }).sort({date:-1});
+    const items = await expense.find({ userid: req.userid }).populate({ path: 'ledger', select: 'ledger' }).sort({ date: -1 });
     // console.log(result)
 
     res.json({
@@ -97,4 +151,4 @@ const userdata = asyncHandler(async (req, res, next) => {
 
 
 
-module.exports = { userdata, userledger, addexpense, expdetail, explist };
+module.exports = { userdata, userledger, addexpense, expdetail, explist,allexpe };

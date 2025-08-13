@@ -1,6 +1,10 @@
 const Expense = require('../modals/exp_schema');
 const { ApiError } = require('../utils/apierror');
 const asyncHandler = require('../utils/asyncHandler')
+import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
+
+dayjs.extend(utc);
 
 
 // *--------------------------------------
@@ -31,7 +35,10 @@ const delmany = asyncHandler(async (req, res,next) => {
 const updateexp = asyncHandler(async (req, res,next) => {
     const { _id, ledger, date, amount, narration } = req.body;
 
-    const result = await Expense.findByIdAndUpdate({ _id }, { ledger, date, amount, narration });
+    const result = await Expense.findByIdAndUpdate({ _id }, { ledger,
+        //  date:new Date(date).toISOString(),
+         date: dayjs(date).utc().startOf('day').toDate(),
+          amount, narration });
     if (!result) {
          throw new ApiError(422, "Incorrect Expense Id");
     }

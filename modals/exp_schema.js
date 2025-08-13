@@ -10,7 +10,7 @@ const expe = new mongo.Schema({
         ref:'ledger'
     },
     date:{
-        type:String,
+        type:Date,
         required:true
     },
     amount:{
