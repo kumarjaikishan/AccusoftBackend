@@ -1,26 +1,50 @@
 const mongo = require('mongoose');
+const dayjs = require("dayjs");
+const utc = require("dayjs/plugin/utc");
+const timezone = require("dayjs/plugin/timezone");
+
+dayjs.extend(utc);
+dayjs.extend(timezone);
 
 const expe = new mongo.Schema({
-    userid:{
-        type:mongo.Schema.Types.ObjectId,
-        ref:'user'
+    userid: {
+        type: mongo.Schema.Types.ObjectId,
+        ref: 'user'
     },
-    ledger:{
-        type:mongo.Schema.Types.ObjectId,
-        ref:'ledger'
+    ledger: {
+        type: mongo.Schema.Types.ObjectId,
+        ref: 'ledger'
     },
-    date:{
-        type:Date,
-        required:true
+    // date:{
+    //     type:Date,
+    //     required:true
+    // },
+    // date: {
+    //     type: Date,
+    //     set: (value) => {
+    //         return dayjs(value)        // parse input
+    //             .utc()                 // convert to UTC
+    //             .startOf("day")        // set time to 00:00:00 UTC
+    //             .toDate();             // convert to native Date
+    //     }
+    // },
+    date: {
+        type: Date,
+        set: (value) => {
+            return dayjs(value)
+                .startOf("day") // start of **local** day
+                .utc(true)      // convert to UTC **without changing the date**
+                .toDate();
+        }
     },
-    amount:{
-        type:Number,
-        required:true
+    amount: {
+        type: Number,
+        required: true
     },
-    narration:{
-        type:String,
-        required:true
+    narration: {
+        type: String,
+        required: true
     }
 })
-const expense = new mongo.model("expense",expe);
-module.exports=expense;
+const expense = new mongo.model("expense", expe);
+module.exports = expense;

@@ -14,7 +14,7 @@ const dayjs = require('dayjs')
 //     doc.date = dayjs(doc.date).toDate();
 //     await doc.save();
 //   }
-  
+
 //   return res.status(200).json({message:'updated'}); 
 // });
 
@@ -36,23 +36,23 @@ const dayjs = require('dayjs')
 // });
 
 const allexpe = asyncHandler(async (req, res, next) => {
-  await expense.updateMany(
-    { date: { $type: "string" } }, // only if date is stored as string
-    [
-      {
-        $set: {
-          date: {
-            $dateFromString: {
-              dateString: "$date",
-              timezone: "UTC" // ensures ISO normalization
+    await expense.updateMany(
+        { date: { $type: "string" } }, // only if date is stored as string
+        [
+            {
+                $set: {
+                    date: {
+                        $dateFromString: {
+                            dateString: "$date",
+                            timezone: "UTC" // ensures ISO normalization
+                        }
+                    }
+                }
             }
-          }
-        }
-      }
-    ]
-  );
+        ]
+    );
 
-  res.status(200).json({ message: 'All string dates converted to Date objects in UTC' });
+    res.status(200).json({ message: 'All string dates converted to Date objects in UTC' });
 });
 
 
@@ -62,12 +62,12 @@ const allexpe = asyncHandler(async (req, res, next) => {
 const addexpense = asyncHandler(async (req, res, next) => {
     //  throw new ApiError(400, "All Fields are Required");
     const { ledger, date, amount, narration } = req.body;
+
     if (!ledger || !date || !amount || !narration) {
         throw new ApiError(400, "All Fields are Required");
     }
 
-    const query = new expense({ userid: req.userid, ledger, date:new Date(date).toISOString(), amount, narration });
-    console.log("new expense creadted",query)
+    const query = new expense({ userid: req.userid, ledger, date, amount, narration });
     const result = await query.save();
     if (result) {
         return res.status(201).json({
@@ -151,4 +151,4 @@ const userdata = asyncHandler(async (req, res, next) => {
 
 
 
-module.exports = { userdata, userledger, addexpense, expdetail, explist,allexpe };
+module.exports = { userdata, userledger, addexpense, expdetail, explist, allexpe };
