@@ -66,13 +66,14 @@ const addexpense = asyncHandler(async (req, res, next) => {
     if (!ledger || !date || !amount || !narration) {
         throw new ApiError(400, "All Fields are Required");
     }
-
+    // console.log("date", date)
     const query = new expense({ userid: req.userid, ledger, date, amount, narration });
+    // console.log(query)
     const result = await query.save();
     if (result) {
-        return res.status(201).json({
-            message: "Expense Added"
-        })
+    return res.status(201).json({
+        message: "Expense Added"
+    })
     }
 })
 

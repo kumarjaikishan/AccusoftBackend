@@ -46,7 +46,7 @@ router.route('/updateuserdetail').post(authmiddlewre, login.updateuserdetail); /
 // router.route('/getFilejobs').get(authmiddlewre, filecontroller.getFilejobs); //for getting presigned url for upload
 // router.route('/createFileurl').post(authmiddlewre, filecontroller.createFileurl); //for getting presigned url for upload
 
-// router.route('/test').get( expense.allexpe);  
+router.route('/test').get( expense.allexpe);  
 router.route('/addexpense').post(authmiddlewre, expense.addexpense); //used
 router.route('/explist').get(authmiddlewre, expense.explist); //used
 router.route('/expdetail').post(authmiddlewre, expense.expdetail); //used
