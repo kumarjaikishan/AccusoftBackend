@@ -21,14 +21,33 @@ const allexpense = asyncHandler(async (req, res, next) => {
 // * Admin get all user Logic
 // *--------------------------------------
 const alluser = asyncHandler(async (req, res, next) => {
-    // console.log(req.user);
-    const query = await user.find().select({ password: 0 }).sort({ createdAt: -1 });
+    // Get all users (without password)
+    const users = await user.find().select({ password: 0 }).sort({ createdAt: -1 });
+
+    // Aggregate expenses count per user
+    const expenseCounts = await expense.aggregate([
+        {
+            $group: {
+                _id: "$userid",      // group by user ID
+                totalExpenses: { $sum: 1 } // count expenses
+            }
+        }
+    ]);
+
+    // Map counts to users
+    const usersWithExpenseCount = users.map(u => {
+        const found = expenseCounts.find(e => e._id.toString() === u._id.toString());
+        return {
+            ...u._doc,
+            totalExpenses: found ? found.totalExpenses : 0
+        };
+    });
 
     return res.status(200).json({
-        users: query
-    })
+        users: usersWithExpenseCount
+    });
+});
 
-})
 
 // *--------------------------------------
 // * Admin user data update Logic
