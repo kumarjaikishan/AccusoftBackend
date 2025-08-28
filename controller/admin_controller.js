@@ -11,7 +11,7 @@ const { ApiError } = require('../utils/apierror')
 // *--------------------------------------
 const allexpense = asyncHandler(async (req, res, next) => {
     // console.log(req.user);
-    const query = await expense.find().populate([{ path: 'userid', select: "name" }, { path: 'ledger', select: 'ledger' }]).sort({ date: -1 });
+    const query = await expense.find().populate([{ path: 'userid', select: "name" }, { path: 'ledger', select: 'ledger' }]).sort({ date: -1, _id: -1 });
     return res.status(200).json({
         explist: query
     })
