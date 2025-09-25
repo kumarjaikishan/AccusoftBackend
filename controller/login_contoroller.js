@@ -187,7 +187,7 @@ const login = async (req, res, next) => {
         },
           process.env.jwt_token,
           {
-            expiresIn: "15d",
+            expiresIn: "45d",
             // expiresIn: "5s",
           }
         );
