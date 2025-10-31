@@ -13,12 +13,12 @@ const addledger = asyncHandler(async (req, res, next) => {
         throw new ApiError(400, "All Fields are Required");
     }
 
-    const isExists = await ledmodel.findOne({ userid: userid, ledger, budget });
+    const isExists = await ledmodel.findOne({ userid: userid, ledger });
     if (isExists) {
         throw new ApiError(400, `${req.body.ledger} Already Exist`);
     }
 
-    const query = new ledmodel({ userid: req.userid, ledger: req.body.ledger });
+    const query = new ledmodel({ userid, ledger, budget });
     const result = await query.save();
     // console.log(result);
     return res.status(200).json({
