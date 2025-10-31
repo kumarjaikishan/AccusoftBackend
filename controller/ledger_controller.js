@@ -7,18 +7,20 @@ const { ApiError } = require('../utils/apierror');
 // * expense single data delete logic
 // *--------------------------------------
 const addledger = asyncHandler(async (req, res, next) => {
-    const { userid, ledger, budget = 0 } = req.body;
+    // console.log(req.body);
+    // console.log(req.userid);
+    const { ledger, budget = 0 } = req.body;
 
-    if (!req.userid || !req.body.ledger) {
+    if (!req.userid || !ledger) {
         throw new ApiError(400, "All Fields are Required");
     }
 
-    const isExists = await ledmodel.findOne({ userid: userid, ledger });
+    const isExists = await ledmodel.findOne({ userid: req.userid, ledger });
     if (isExists) {
         throw new ApiError(400, `${req.body.ledger} Already Exist`);
     }
 
-    const query = new ledmodel({ userid, ledger, budget });
+    const query = new ledmodel({ userid:req.userid, ledger, budget });
     const result = await query.save();
     // console.log(result);
     return res.status(200).json({
