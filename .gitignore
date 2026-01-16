@@ -8,10 +8,10 @@ node_modules
 # testing
 /coverage
 
-
+Dockerfile
 # production
 .env
-
+.env.*
 # misc
 .env
 .DS_Store

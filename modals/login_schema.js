@@ -11,7 +11,7 @@ const log = new mongo.Schema({
         type: String,
         required: [true, "Email is required"],
         unique: true,
-        index:true
+        index: true
     },
     phone: {
         type: Number,
@@ -28,7 +28,7 @@ const log = new mongo.Schema({
     },
     imgsrc: {
         type: String,
-        default:""
+        default: ""
     },
     isadmin: {
         type: Boolean,
@@ -37,6 +37,10 @@ const log = new mongo.Schema({
     isverified: {
         type: Boolean,
         default: false
+    },
+    lastActivity: {
+        type: Date,
+        default: null
     }
 }, { timestamps: true })
 
@@ -45,7 +49,7 @@ log.pre("save", async function () {
     // console.log(this);
     const user = this;
     if (!user.isModified("password")) {
-       return next();
+        return next();
     }
     try {
         const saltRound = await bcrypt.genSalt(10);

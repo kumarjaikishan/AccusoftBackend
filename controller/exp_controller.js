@@ -57,8 +57,6 @@ const allexpe = asyncHandler(async (req, res, next) => {
 
 
 
-
-
 const addexpense = asyncHandler(async (req, res, next) => {
     //  throw new ApiError(400, "All Fields are Required");
     const { ledger, date, amount, narration } = req.body;
@@ -66,15 +64,24 @@ const addexpense = asyncHandler(async (req, res, next) => {
     if (!ledger || !date || !amount || !narration) {
         throw new ApiError(400, "All Fields are Required");
     }
-    // console.log("date", date)
-    const query = new expense({ userid: req.userid, ledger, date, amount, narration });
-    // console.log(query)
-    const result = await query.save();
-    if (result) {
+
+    await expense.create({
+        userid: req.userid,
+        ledger,
+        date,
+        amount,
+        narration
+    });
+
+    // smart denormalized update
+    await user.updateOne(
+        { _id: req.userid },
+        { $max: { lastActivity: new Date() } }
+    );
+
     return res.status(201).json({
         message: "Expense Added"
     })
-    }
 })
 
 const explist = asyncHandler(async (req, res, next) => {
@@ -85,7 +92,7 @@ const explist = asyncHandler(async (req, res, next) => {
     const start = (page - 1) * limit;
     const end = page * limit;
 
-    const items = await expense.find({ userid: req.userid }).populate({ path: 'ledger', select: 'ledger' }).sort({ date: -1,_id: -1 });
+    const items = await expense.find({ userid: req.userid }).populate({ path: 'ledger', select: 'ledger' }).sort({ date: -1, _id: -1 });
     // console.log(result)
 
     res.json({
@@ -130,15 +137,15 @@ const userledger = asyncHandler(async (req, res, next) => {
     }
 })
 
- 
+
 // *--------------------------------------
 // * User Login Logic
 // *--------------------------------------
 const userdata = asyncHandler(async (req, res, next) => {
     // console.time("time taken by userdata");
     const profile = await user.findOne({ _id: req.user._id });
-    const explist = await expense.find({ userid: req.user._id }).populate({ path: 'ledger', select: 'ledger' }).sort({ date: -1,_id: -1 });
-    const ledgere = await ledger.find({ userid: req.user._id }).select({ ledger: 1, budget:1 }).sort({ createdAt: -1 });
+    const explist = await expense.find({ userid: req.user._id }).populate({ path: 'ledger', select: 'ledger' }).sort({ date: -1, _id: -1 });
+    const ledgere = await ledger.find({ userid: req.user._id }).select({ ledger: 1, budget: 1 }).sort({ createdAt: -1 });
     // console.timeEnd("time taken by userdata");
     if (explist) {
         return res.status(200).json({
