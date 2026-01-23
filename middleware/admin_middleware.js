@@ -1,10 +1,19 @@
-const adminmiddleware = async (req, res, next) => {
-    // console.log(req.user.isadmin);
-    if (!req.user.isAdmin) {
-      return  res.status(403).json({
-        message: "Access Denied!"
-        })
+const authorizationMiddleware = (accept = []) => {
+  return async (req, res, next) => {
+    if (!req.user || !req.user.userType) {
+      return res.status(401).json({
+        message: "Unauthorized"
+      });
     }
-    next();
-}
-module.exports = adminmiddleware;
+
+    if (accept.includes(req.user.userType)) {
+      return next();
+    }
+
+    return res.status(403).json({
+      message: "Access Denied!"
+    });
+  };
+};
+
+module.exports = { authorizationMiddleware };

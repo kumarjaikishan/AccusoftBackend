@@ -3,9 +3,7 @@ const expense = require('../modals/exp_schema')
 const asyncHandler = require('../utils/asyncHandler');
 const { ApiError } = require('../utils/apierror');
 
-// *--------------------------------------
-// * expense single data delete logic
-// *--------------------------------------
+
 const addledger = asyncHandler(async (req, res, next) => {
     // console.log(req.body);
     // console.log(req.userid);
@@ -28,11 +26,9 @@ const addledger = asyncHandler(async (req, res, next) => {
     })
 })
 
-// *--------------------------------------
-// * expense single data delete logic
-// *--------------------------------------
 const updateledger = asyncHandler(async (req, res, next) => {
     const { ledger_id, newledger, newbudget } = req.body;
+     const userId = req.userid;
     // console.log("old id", ledger_id, newbudget);
 
     if (!ledger_id || !newledger) {
@@ -51,7 +47,7 @@ const updateledger = asyncHandler(async (req, res, next) => {
     }
 
     const query = await ledmodel.findByIdAndUpdate(
-        { _id: ledger_id },
+        { _id: ledger_id , userid:userId},
         { ledger: newledger, budget: newbudget },
         { new: true } // return updated doc if needed
     );
@@ -64,7 +60,6 @@ const updateledger = asyncHandler(async (req, res, next) => {
         message: "Ledger Updated"
     });
 });
-
 
 const mergeledger = asyncHandler(async (req, res, next) => {
     const { ledger_id, newledger } = req.body;
@@ -85,18 +80,16 @@ const mergeledger = asyncHandler(async (req, res, next) => {
     }
 })
 
-
-// *--------------------------------------
-// * expense single data delete logic
-// *--------------------------------------
 const deleteledger = asyncHandler(async (req, res, next) => {
     // console.log(req.body.ledgerid);
     const { ledgerid } = req.body;
+    const userId = req.userid;
+
     if (!ledgerid) {
         throw new ApiError(400, "Ledger Id Required");
     }
-    const result = await ledmodel.findByIdAndDelete({ _id: ledgerid });
-    const deleteexp = await expense.deleteMany({ ledger: ledgerid })
+    const result = await ledmodel.findByIdAndDelete({ _id: ledgerid, userid:userId });
+    const deleteexp = await expense.deleteMany({ ledger: ledgerid ,userid:userId})
     // console.log(result);
     if (!result) {
         throw new ApiError(400, "Id not Valid");

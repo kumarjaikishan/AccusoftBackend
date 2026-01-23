@@ -5,6 +5,7 @@ const asyncHandler = require('../utils/asyncHandler')
 const { ApiError } = require('../utils/apierror')
 const dayjs = require('dayjs')
 
+
 // *--------------------------------------
 // * User Registration Logic
 // *--------------------------------------
@@ -55,8 +56,6 @@ const allexpe = asyncHandler(async (req, res, next) => {
     res.status(200).json({ message: 'All string dates converted to Date objects in UTC' });
 });
 
-
-
 const addexpense = asyncHandler(async (req, res, next) => {
     //  throw new ApiError(400, "All Fields are Required");
     const { ledger, date, amount, narration } = req.body;
@@ -84,6 +83,93 @@ const addexpense = asyncHandler(async (req, res, next) => {
     })
 })
 
+const delmany = asyncHandler(async (req, res, next) => {
+    const id = req.body.id;
+    const userId = req.userid;
+    // console.log(id);
+    if (!Array.isArray(id) || id.length === 0) {
+        throw new ApiError(422, "Valid ID array required");
+    }
+
+    const result = await expense.deleteMany({
+        _id: { $in: id },
+        userid: userId
+    });
+
+    if (result.deletedCount === 0) {
+        throw new ApiError(403, "No expenses deleted or unauthorized access");
+    }
+
+    return res.status(200).json({
+        message: "Deleted Successfully",
+        data: result
+    })
+})
+
+const Admindelmany = asyncHandler(async (req, res, next) => {
+    const id = req.body.id;
+    // console.log(id);
+    if (!Array.isArray(id) || id.length === 0) {
+        throw new ApiError(422, "Valid ID array required");
+    }
+
+    const result = await expense.deleteMany({
+        _id: { $in: id },
+    });
+
+    if (result.deletedCount === 0) {
+        throw new ApiError(403, "No expenses deleted or unauthorized access");
+    }
+
+    return res.status(200).json({
+        message: "Deleted Successfully",
+        data: result
+    })
+})
+
+const updateexp = asyncHandler(async (req, res, next) => {
+    const { _id, ledger, date, amount, narration } = req.body;
+    const userId = req.userid;
+
+    const result = await expense.findByIdAndUpdate({ _id, userid: userId }, {
+        ledger,
+        date,
+        amount, narration
+    });
+
+    if (!result) {
+        throw new ApiError(
+            403,
+            "You are not allowed to update this expense"
+        );
+    }
+
+    return res.status(200).json({
+        message: "Updated Successfully"
+    });
+})
+
+const Asminupdateexp = asyncHandler(async (req, res, next) => {
+    const { _id, ledger, date, amount, narration } = req.body;
+
+    const result = await expense.findByIdAndUpdate({ _id }, {
+        ledger,
+        date,
+        amount, narration
+    });
+
+    if (!result) {
+        throw new ApiError(
+            403,
+            "You are not allowed to update this expense"
+        );
+    }
+
+    return res.status(200).json({
+        message: "Updated Successfully"
+    });
+})
+
 const explist = asyncHandler(async (req, res, next) => {
 
     const page = parseInt(req.query.page) || 1;
@@ -102,7 +188,6 @@ const explist = asyncHandler(async (req, res, next) => {
     });
 })
 
-
 const expdetail = asyncHandler(async (req, res, next) => {
     const { expId } = req.body;
     if (!expId) {
@@ -118,10 +203,6 @@ const expdetail = asyncHandler(async (req, res, next) => {
     }
 })
 
-
-// *--------------------------------------
-// * User Login Logic
-// *--------------------------------------
 const userledger = asyncHandler(async (req, res, next) => {
     const { userledger } = req.body;
     if (userledger.length < 1) {
@@ -137,10 +218,6 @@ const userledger = asyncHandler(async (req, res, next) => {
     }
 })
 
-
-// *--------------------------------------
-// * User Login Logic
-// *--------------------------------------
 const userdata = asyncHandler(async (req, res, next) => {
     // console.time("time taken by userdata");
     const profile = await user.findOne({ _id: req.user._id });
@@ -157,6 +234,4 @@ const userdata = asyncHandler(async (req, res, next) => {
 })
 
 
-
-
-module.exports = { userdata, userledger, addexpense, expdetail, explist, allexpe };
+module.exports = { userdata, userledger, addexpense, expdetail,Admindelmany,Asminupdateexp, explist, allexpe, delmany, updateexp };

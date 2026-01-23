@@ -71,6 +71,7 @@ const photo = async (req, res) => {
   }
 
 }
+
 const random = async (len) => {
   const rand = 'abcdefghijklmnopqrstuvwxyz123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
   let result = '';
@@ -162,9 +163,6 @@ const passreset = async (req, res, next) => {
   }
 }
 
-// *--------------------------------------
-// * User Login 1st method with nodecache Logic
-// *--------------------------------------
 const login = async (req, res, next) => {
   const { email, password } = req.body;
   if (!email || !password) {
@@ -183,7 +181,8 @@ const login = async (req, res, next) => {
           email: result.email,
           isAdmin: result.isadmin,
           _id: result._id.toString(),
-          name: result.name
+          name: result.name,
+          userType: result.userType
         },
           process.env.jwt_token,
           {
@@ -209,7 +208,7 @@ const login = async (req, res, next) => {
         token: newToken,
         userId: userIdString,
         isadmin: isUser.isadmin,
-         name:isUser.name
+        name: isUser.name
       });
 
     } else {
@@ -220,7 +219,6 @@ const login = async (req, res, next) => {
     return next({ status: 400, message: error.message });
   }
 }
-
 
 // *--------------------------------------
 // * User SignUp Logic
@@ -247,7 +245,6 @@ const signup = asyncHandler(async (req, res, next) => {
 })
 
 
-
 const updateuserdetail = asyncHandler(async (req, res, next) => {
   // console.log(req.user);
   const { name, phone } = req.body;
@@ -263,6 +260,7 @@ const updateuserdetail = asyncHandler(async (req, res, next) => {
   }
 
 })
+
 
 const verify = async (req, res) => {
   try {
