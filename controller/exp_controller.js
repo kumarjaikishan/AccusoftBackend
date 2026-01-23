@@ -255,5 +255,11 @@ const findStale = async()=>{
 }
 // findStale()
 
+const adminupdateusertype = async()=>{
+    await user.updateMany({userType:'user'})
+    console.log("All are Updated")
+}
+// adminupdateusertype()
+
 
 module.exports = { userdata, userledger, addexpense, expdetail,Admindelmany,Asminupdateexp, explist, allexpe, delmany, updateexp };
