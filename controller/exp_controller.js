@@ -234,4 +234,26 @@ const userdata = asyncHandler(async (req, res, next) => {
 })
 
 
+// to find out all the expanse whose userId don't exist and the delete
+const findStale = async()=>{
+     const allusers =await user.find().select('_id');
+     let list = allusers.map((val)=>{
+        return val._id.toString();
+     })
+     console.log("list", list)
+
+     let expes = await expense.find().select('userid')
+    //  console.log("expes", list.includes(expes.userid.toString()))
+     for (const e of expes) {
+        if(list.includes(e.userid.toString())){
+            // console.log('yes')
+        }else{
+            console.log("no")
+            await expense.deleteOne({_id:e._id})
+        }
+     }
+}
+// findStale()
+
+
 module.exports = { userdata, userledger, addexpense, expdetail,Admindelmany,Asminupdateexp, explist, allexpe, delmany, updateexp };
