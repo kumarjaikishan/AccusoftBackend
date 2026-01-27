@@ -13,20 +13,10 @@ const errorHandler = (err, req, res, next) => {
     res.status(statusCode).json({
         statusCode: statusCode,
         success: false,
-        message: err.message || "Internal Server Error kishan",
+        message: err.message || "Internal Server Error",
         errors: err.errors || [],
-        // data: err.data || null,
-        // stack:err.stack,
-        // stack: process.env.NODE_ENV === "development" ? err.stack : undefined,
+       // stack: process.env.NODE_ENV === "development" ? err.stack : undefined,
     });
 };
 
 module.exports = errorHandler;
-
-// const errorHandle =(err,req,res,next)=>{
-//     const status = err.status || 500;
-//     const msg = err.message || "Backend Error";
-
-//     return res.status(status).json({ message:msg });
-// };
-// module.exports = errorHandle;
