@@ -36,7 +36,8 @@ const generateAccessToken = (user) => {
       _id: user._id.toString(),
     },
     process.env.jwt_token,
-    { expiresIn: "10m" }
+    // { expiresIn: "10m" }
+    { expiresIn: "10s" }
   );
 };
 
@@ -47,7 +48,8 @@ const generateRefreshToken = async (userobj) => {
       _id: userobj._id.toString(),
     },
     process.env.refresh_token,
-    { expiresIn: "7d" }
+    // { expiresIn: "7d" }
+    { expiresIn: "30s" }
   );
   await user.findByIdAndUpdate(userobj._id, { refreshToken: newToken });
 
@@ -251,7 +253,7 @@ const refreshToken = async (req, res) => {
 
     jwt.verify(token, process.env.refresh_token, async (err, decoded) => {
       if (err || decoded.userId !== foundUser._id.toString())
-        return res.sendStatus(403);
+        return res.sendStatus(405);
 
       const accessToken = generateAccessToken(foundUser);
       const newRefreshToken = await generateRefreshToken(foundUser);
