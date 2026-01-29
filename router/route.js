@@ -27,6 +27,8 @@ router.route('/signup').post(login.signup, emailauth);    //used
 router.route('/login').post(emailauth, login.login);      //used
 router.route('/verify').get(login.verify);
 router.route('/setpassword').post(login.setpassword);         //used
+router.route('/refresh').post(login.refreshToken);         //used
+router.route('/logout').post(login.logout);         //used
 router.route('/passreset').get(authmiddlewre,authorizationMiddleware(['user','admin']), login.passreset);         //used
 router.route('/checkmail').post(login.checkmail);     //used
 router.route('/photo').post(authmiddlewre, upload.single('image'), login.photo); //used

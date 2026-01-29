@@ -18,41 +18,6 @@ cloudinary.config({
 // * User Profile pic Upload Logic
 // *--------------------------------------
 
-const options = {
-  httpOnly: true,
-  secure: true,
-  sameSite: "none", //comment this for localHost
-  maxAge: 7 * 24 * 60 * 60 * 1000
-}
-
-const generateAccessToken = (user) => {
-  return jwt.sign(
-    {
-      userId: user._id.toString(),
-      isAdmin: user.isadmin,
-      name: user.name,
-      email: user.email,
-      userType: user.userType,
-      _id: user._id.toString(),
-    },
-    process.env.jwt_token,
-    { expiresIn: "10m" }
-  );
-};
-
-const generateRefreshToken = async (userobj) => {
-  let newToken = jwt.sign(
-    {
-      userId: userobj._id,
-      _id: userobj._id.toString(),
-    },
-    process.env.refresh_token,
-    { expiresIn: "7d" }
-  );
-  await user.findByIdAndUpdate(userobj._id, { refreshToken: newToken });
-
-  return newToken
-};
 
 const photo = async (req, res) => {
   if (!req.file) {
@@ -209,85 +174,55 @@ const login = async (req, res, next) => {
     if (!isUser) {
       return next({ status: 400, message: "User not found" });
     }
+    const generateToken = async (result) => {
+      try {
+        return jwt.sign({
+          userId: result._id.toString(),
+          email: result.email,
+          isAdmin: result.isadmin,
+          _id: result._id.toString(),
+          name: result.name,
+          userType: result.userType
+        },
+          process.env.jwt_token,
+          {
+            expiresIn: "60d",
+            // expiresIn: "5s",
+          }
+        );
+      } catch (error) {
+        console.error(error);
+      }
+    }
 
     if (await bcrypt.compare(password, isUser.password)) {
-      const accessToken = generateAccessToken(isUser);
-      const refreshToken = await generateRefreshToken(isUser);
-      // console.log("generated refreshn token", refreshToken)
-
+      const newToken = await generateToken(isUser);
       const userIdString = isUser._id.toString();
-      // await user.findByIdAndUpdate(isUser._id, { refreshToken });
+      isUser.password = undefined;
+      isUser.createdAt = undefined;
+      isUser._id = undefined;
+      isUser.phone = undefined;
 
-      return res
-        .status(200)
-        .cookie('refreshToken', refreshToken, options)
-        .json({
-          message: "Login Successful",
-          token: accessToken,
-          userId: userIdString,
-          isadmin: isUser.isadmin,
-          name: isUser.name
-        });
+      return res.status(200).json({
+        message: "Login Successful",
+        token: newToken,
+        userId: userIdString,
+        isadmin: isUser.isadmin,
+        name: isUser.name
+      });
 
     } else {
       return next({ status: 400, message: "Incorrect Password" });
     }
   } catch (error) {
-    console.log(error.message);
+    console.log(error);
     return next({ status: 400, message: error.message });
   }
 }
 
-const refreshToken = async (req, res) => {
-  // console.log("COOKIES:", req.cookies);
-
-  try {
-    const token = req.cookies.refreshToken;
-    if (!token) return res.sendStatus(401);
-
-    const foundUser = await user.findOne({ refreshToken: token });
-    // console.log(foundUser)
-    if (!foundUser) return res.sendStatus(403);
-
-    jwt.verify(token, process.env.refresh_token, async (err, decoded) => {
-      if (err || decoded.userId !== foundUser._id.toString())
-        return res.sendStatus(403);
-
-      const accessToken = generateAccessToken(foundUser);
-      const newRefreshToken = await generateRefreshToken(foundUser);
-
-      return res
-        .status(200)
-        .cookie('refreshToken', newRefreshToken, options)
-        .json({ accessToken });
-    });
-  } catch (error) {
-    console.log(error.message)
-    return res.sendStatus(500);
-  }
-};
-
-const logout = async (req, res) => {
-  try {
-    // console.log("lohout ke pass request")
-    const token = req.cookies.refreshToken;
-
-    await user.updateOne({ refreshToken: token }, {
-      $unset: {
-        refreshToken: 1 // this removes the field from document
-      }
-    });
-
-    return res
-      .status(200)
-      .clearCookie("refreshToken", options)
-      .json({ message: 'User Looged Out' })
-
-  } catch (error) {
-    console.log(error.message)
-  }
-};
-
+// *--------------------------------------
+// * User SignUp Logic
+// *--------------------------------------
 const signup = asyncHandler(async (req, res, next) => {
   // console.log(req.body);
   const { name, email, phone, password } = req.body;
@@ -309,6 +244,7 @@ const signup = asyncHandler(async (req, res, next) => {
   }
 })
 
+
 const updateuserdetail = asyncHandler(async (req, res, next) => {
   // console.log(req.user);
   const { name, phone } = req.body;
@@ -324,6 +260,7 @@ const updateuserdetail = asyncHandler(async (req, res, next) => {
   }
 
 })
+
 
 const verify = async (req, res) => {
   try {
@@ -665,4 +602,4 @@ const verify = async (req, res) => {
   }
 }
 
-module.exports = { signup, passreset, setpassword, refreshToken, logout, checkmail, photo, login, updateuserdetail, verify };
+module.exports = { signup, passreset, setpassword, checkmail, photo, login, updateuserdetail, verify };
