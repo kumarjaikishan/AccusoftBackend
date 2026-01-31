@@ -36,7 +36,7 @@ const generateAccessToken = (user) => {
       _id: user._id.toString(),
     },
     process.env.jwt_token,
-    { expiresIn: "20d" }
+    { expiresIn: "10m" }
     // { expiresIn: "10s" }
   );
 };
@@ -49,7 +49,7 @@ const generateRefreshToken = async (userobj) => {
     },
     process.env.refresh_token,
     { expiresIn: "7d" }
-    // { expiresIn: "30s" }
+    // { expiresIn: "12s" }
   );
   await user.findByIdAndUpdate(userobj._id, { refreshToken: newToken });
 
