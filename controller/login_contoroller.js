@@ -36,7 +36,7 @@ const generateAccessToken = (user) => {
       _id: user._id.toString(),
     },
     process.env.jwt_token,
-    { expiresIn: "10m" }
+    { expiresIn: "20d" }
     // { expiresIn: "10s" }
   );
 };
