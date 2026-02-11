@@ -48,8 +48,8 @@ const generateRefreshToken = async (userobj) => {
       _id: userobj._id.toString(),
     },
     process.env.refresh_token,
-    { expiresIn: "7d" }
-    // { expiresIn: "12s" }
+    { expiresIn: "15d" }
+    // { expiresIn: "20s" }
   );
   await user.findByIdAndUpdate(userobj._id, { refreshToken: newToken });
 
