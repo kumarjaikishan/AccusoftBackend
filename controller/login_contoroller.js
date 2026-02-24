@@ -36,8 +36,8 @@ const generateAccessToken = (user) => {
       _id: user._id.toString(),
     },
     process.env.jwt_token,
-    { expiresIn: "10m" }
-    // { expiresIn: "10s" }
+    // { expiresIn: "10m" }
+    { expiresIn: "10s" }
   );
 };
 
@@ -48,12 +48,19 @@ const generateRefreshToken = async (userobj) => {
       _id: userobj._id.toString(),
     },
     process.env.refresh_token,
-    { expiresIn: "15d" }
+    // { expiresIn: "15d" }
+    { expiresIn: "25s" }
   );
+  try {
+    await user.findByIdAndUpdate(userobj._id, {
+      $push: { refreshTokens: newToken }
+    });
 
-  await user.findByIdAndUpdate(userobj._id, {
-    $push: { refreshTokens: newToken }
-  });
+  } catch (error) {
+    console.log(erro)
+  }
+
+
 
   return newToken;
 };
@@ -247,6 +254,15 @@ const refreshToken = async (req, res) => {
     const token = req.cookies.refreshToken;
     if (!token) return res.sendStatus(401);
 
+    // another method, first decode and then make indexed query
+    //  let decoded;
+    // try {
+    //   decoded = jwt.verify(token, process.env.refresh_token);
+    // } catch {
+    //   return res.sendStatus(403);
+    // }
+    // console.log(decoded)
+
     const foundUser = await user.findOne({ refreshTokens: token });
     if (!foundUser) return res.sendStatus(403);
 
@@ -289,6 +305,7 @@ const refreshToken = async (req, res) => {
 };
 
 const logout = async (req, res) => {
+  // console.log("aaya logout")
   try {
     const token = req.cookies.refreshToken;
 
