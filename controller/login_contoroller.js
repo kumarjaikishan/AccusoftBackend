@@ -42,18 +42,20 @@ const generateAccessToken = (user) => {
 };
 
 const generateRefreshToken = async (userobj) => {
-  let newToken = jwt.sign(
+  const newToken = jwt.sign(
     {
       userId: userobj._id,
       _id: userobj._id.toString(),
     },
     process.env.refresh_token,
     { expiresIn: "15d" }
-    // { expiresIn: "20s" }
   );
-  await user.findByIdAndUpdate(userobj._id, { refreshToken: newToken });
 
-  return newToken
+  await user.findByIdAndUpdate(userobj._id, {
+    $push: { refreshTokens: newToken }
+  });
+
+  return newToken;
 };
 
 const photo = async (req, res) => {
@@ -241,52 +243,72 @@ const login = async (req, res, next) => {
 }
 
 const refreshToken = async (req, res) => {
-  // console.log("COOKIES:", req.cookies);
-
   try {
     const token = req.cookies.refreshToken;
     if (!token) return res.sendStatus(401);
 
-    const foundUser = await user.findOne({ refreshToken: token });
-    // console.log(foundUser)
+    const foundUser = await user.findOne({ refreshTokens: token });
     if (!foundUser) return res.sendStatus(403);
 
     jwt.verify(token, process.env.refresh_token, async (err, decoded) => {
-      if (err || decoded.userId !== foundUser._id.toString())
-        return res.sendStatus(405);
+      if (err || decoded.userId !== foundUser._id.toString()) {
+        return res.sendStatus(403);
+      }
+
+      // Remove old token (rotation)
+      await user.updateOne(
+        { _id: foundUser._id },
+        { $pull: { refreshTokens: token } }
+      );
 
       const accessToken = generateAccessToken(foundUser);
-      const newRefreshToken = await generateRefreshToken(foundUser);
+
+      const newRefreshToken = jwt.sign(
+        {
+          userId: foundUser._id,
+          _id: foundUser._id.toString(),
+        },
+        process.env.refresh_token,
+        { expiresIn: "15d" }
+      );
+
+      await user.updateOne(
+        { _id: foundUser._id },
+        { $push: { refreshTokens: newRefreshToken } }
+      );
 
       return res
+        .cookie("refreshToken", newRefreshToken, options)
         .status(200)
-        .cookie('refreshToken', newRefreshToken, options)
         .json({ accessToken });
     });
   } catch (error) {
-    console.log(error.message)
+    console.log(error.message);
     return res.sendStatus(500);
   }
 };
 
 const logout = async (req, res) => {
   try {
-    // console.log("lohout ke pass request")
     const token = req.cookies.refreshToken;
 
-    await user.updateOne({ refreshToken: token }, {
-      $unset: {
-        refreshToken: 1 // this removes the field from document
-      }
-    });
+    if (!token) {
+      return res.sendStatus(204);
+    }
+
+    await user.updateOne(
+      { refreshTokens: token },
+      { $pull: { refreshTokens: token } }
+    );
 
     return res
-      .status(200)
       .clearCookie("refreshToken", options)
-      .json({ message: 'User Looged Out' })
+      .status(200)
+      .json({ message: "User Logged Out" });
 
   } catch (error) {
-    console.log(error.message)
+    console.log(error.message);
+    return res.sendStatus(500);
   }
 };
 

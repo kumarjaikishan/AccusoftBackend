@@ -8,7 +8,8 @@ const log = new mongo.Schema({
         required: true
     },
     refreshToken: {
-        type: String
+        type: [String],
+        default: []
     },
     email: {
         type: String,
