@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+const mongoose = require("mongoose");
 
 const categorySchema = new mongoose.Schema(
   {
@@ -22,4 +22,4 @@ const categorySchema = new mongoose.Schema(
 // prevent duplicate categories for same user
 categorySchema.index({ name: 1, userId: 1 }, { unique: true });
 
-export default mongoose.model("Category", categorySchema);
+module.exports = mongoose.model("Category", categorySchema);

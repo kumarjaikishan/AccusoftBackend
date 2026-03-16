@@ -1,12 +1,10 @@
-// import Category from "../models/category.model.js";
-
-import Category from "../modals/category_schema.js";
-import Section from "../modals/section_schema.js";
-import Item from "../modals/items_schema.js";
+const Category = require("../modals/category_schema.js");
+const Section = require("../modals/section_schema.js");
+const Item = require("../modals/items_schema.js");
 
 
 // CREATE CATEGORY
-export const createCategory = async (req, res) => {
+ const createCategory = async (req, res) => {
     // console.log("request received on cretacatergory", req.user);
 
     try {
@@ -42,7 +40,7 @@ export const createCategory = async (req, res) => {
 
 
 // GET ALL CATEGORIES OF USER
-export const getCategories = async (req, res) => {
+ const getCategories = async (req, res) => {
     try {
         const userId = req?.user?.userId;
         const categories = await Category.find().sort({ createdAt: 1 });
@@ -69,7 +67,7 @@ export const getCategories = async (req, res) => {
 
 
 // UPDATE CATEGORY
-export const updateCategory = async (req, res) => {
+ const updateCategory = async (req, res) => {
     try {
 
         const { id } = req.params;
@@ -98,7 +96,7 @@ export const updateCategory = async (req, res) => {
 
 
 // DELETE CATEGORY
-export const deleteCategory = async (req, res) => {
+ const deleteCategory = async (req, res) => {
     try {
 
         const { id } = req.params;
@@ -123,7 +121,7 @@ export const deleteCategory = async (req, res) => {
 
 
 /* CREATE SECTION */
-export const createSection = async (req, res) => {
+ const createSection = async (req, res) => {
     try {
 
         const { name, type, category } = req.body;
@@ -153,7 +151,7 @@ export const createSection = async (req, res) => {
 
 
 /* GET SECTIONS BY CATEGORY */
-export const getSectionsByCategory = async (req, res) => {
+ const getSectionsByCategory = async (req, res) => {
     try {
 
         const { categoryId } = req.params;
@@ -179,7 +177,7 @@ export const getSectionsByCategory = async (req, res) => {
 
 
 /* GET ALL SECTIONS BY USER */
-export const getSectionsByUser = async (req, res) => {
+ const getSectionsByUser = async (req, res) => {
     try {
 
         const { userId } = req.params;
@@ -205,7 +203,7 @@ export const getSectionsByUser = async (req, res) => {
 
 
 /* UPDATE SECTION */
-export const updateSection = async (req, res) => {
+ const updateSection = async (req, res) => {
     try {
 
         const { id } = req.params;
@@ -233,7 +231,7 @@ export const updateSection = async (req, res) => {
 
 
 /* DELETE SECTION */
-export const deleteSection = async (req, res) => {
+ const deleteSection = async (req, res) => {
     try {
 
         const { id } = req.params;
@@ -258,7 +256,7 @@ export const deleteSection = async (req, res) => {
 
 
 /* CREATE ITEM */
-export const createItem = async (req, res) => {
+ const createItem = async (req, res) => {
 
     try {
 
@@ -323,7 +321,7 @@ export const createItem = async (req, res) => {
 
 
 /* GET ITEMS BY SECTION */
-export const getItemsBySection = async (req, res) => {
+ const getItemsBySection = async (req, res) => {
     try {
 
         const { sectionId } = req.params;
@@ -349,7 +347,7 @@ export const getItemsBySection = async (req, res) => {
 
 
 /* GET ITEMS BY USER */
-export const getItemsByUser = async (req, res) => {
+ const getItemsByUser = async (req, res) => {
     try {
 
         const { userId } = req.params;
@@ -375,7 +373,7 @@ export const getItemsByUser = async (req, res) => {
 
 
 /* UPDATE ITEM */
-export const updateItem = async (req, res) => {
+ const updateItem = async (req, res) => {
     try {
 
         const { id } = req.params;
@@ -434,7 +432,7 @@ export const updateItem = async (req, res) => {
 
 
 /* DELETE ITEM */
-export const deleteItem = async (req, res) => {
+ const deleteItem = async (req, res) => {
     try {
         const { id } = req.params;
 
@@ -454,3 +452,6 @@ export const deleteItem = async (req, res) => {
 
     }
 };
+
+
+module.exports = { deleteItem,deleteCategory,createCategory,getCategories,updateCategory,createSection,getSectionsByCategory,getSectionsByUser,updateSection,deleteSection,updateItem,createItem,getItemsByUser,getItemsBySection, };
