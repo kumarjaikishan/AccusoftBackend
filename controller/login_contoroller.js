@@ -310,7 +310,7 @@ const logout = async (req, res) => {
     const token = req.cookies.refreshToken;
 
     if (!token) {
-      return res.sendStatus(204);
+      return res.status(200).json({ message: "Already logged out" });
     }
 
     await user.updateOne(
