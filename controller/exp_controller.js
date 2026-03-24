@@ -84,9 +84,10 @@ const addexpense = asyncHandler(async (req, res, next) => {
 })
 
 const delmany = asyncHandler(async (req, res, next) => {
-    const id = req.body.id;
+    const id = req.body.ExpIds;
     const userId = req.userid;
-    // console.log(id);
+    console.log("id",id);
+
     if (!Array.isArray(id) || id.length === 0) {
         throw new ApiError(422, "Valid ID array required");
     }

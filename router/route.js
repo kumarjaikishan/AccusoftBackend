@@ -53,7 +53,7 @@ router.route('/expdetail').post(authmiddlewre, expense.expdetail); //used
 router.route('/explist').get(authmiddlewre, expense.explist); //used
 router.route('/addexpense').post(authmiddlewre, expense.addexpense); //used
 router.route('/updateexp').post(authmiddlewre, authorizationMiddleware(['user', 'admin']), expense.updateexp); //used
-router.route('/delmany').post(authmiddlewre, authorizationMiddleware(['user', 'admin']), expense.delmany); //used
+router.route('/deleteExpense').post(authmiddlewre, authorizationMiddleware(['user', 'admin']), expense.delmany); //used
 router.route('/userdata').get(authmiddlewre, expense.userdata); //used
 router.route('/userledger').post(authmiddlewre, expense.userledger);    //used         
 
